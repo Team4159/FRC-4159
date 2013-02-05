@@ -51,9 +51,11 @@ public class TargetDetector extends Thread
 				
 				for (int i = 0, ii = filteredImage.getNumberParticles(); i < ii; i++)
 				{
-					ParticleAnalysisReport report = filteredImage.getParticleAnalysisReport(i);
-					if (scoreRectangularity (report) < RECTANGULARITY_THRESHOLD)
+					if (scoreRectangularity (filteredImage, i) < RECTANGULARITY_THRESHOLD)
 						continue;
+
+					double outerAspectRatioScore = scoreAspectRatio (filteredImage, i, true);
+					double innerAspectRatioScore = scoreAspectRatio (filteredImage, i, false);
 				}
 				
 				synchronized (results)
@@ -105,9 +107,28 @@ public class TargetDetector extends Thread
 		}
 	}
 	
-	private static double scoreRectangularity (ParticleAnalysisReport report)
+	private static double scoreRectangularity (BinaryImage image, int index)
+		throws NIVisionException
 	{
-		long bbarea = report.boundingRectWidth * report.boundingRectHeight;
-		return bbarea != 0 ? (double) report.particleArea / bbarea : 0;
+		int bbwidth = (int) NIVision.MeasureParticle (image.image, index, false,
+			NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_WIDTH);
+		int bbheight = (int) NIVision.MeasureParticle (image.image, index, false,
+			NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_HEIGHT);
+		double ptarea = NIVision.MeasureParticle (image.image, index, false,
+			NIVision.MeasurementType.IMAQ_MT_AREA);
+		long bbarea = bbwidth * bbheight;
+		return bbarea != 0 ? (double) ptarea / bbarea : 0;
+	}
+	
+	private static double scoreAspectRatio (BinaryImage image, int index, boolean outer)
+		throws NIVisionException
+	{
+		double rectLong = NIVision.MeasureParticle (image.image, index, false,
+			NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
+		double rectShort = NIVision.MeasureParticle (image.image, index, false,
+			NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
+		double idealAspectRatio = outer ? (62.0 / 29.0) : (62.0 / 20.0);
+		
+		
 	}
 }
