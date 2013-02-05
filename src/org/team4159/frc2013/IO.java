@@ -69,4 +69,7 @@ public class IO
 	
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
+	
+	// private constructor to prevent instantiation
+	private IO () {}
 }

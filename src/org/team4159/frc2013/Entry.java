@@ -22,6 +22,9 @@ public class Entry extends RobotBase
 	public Entry ()
 	{
 		System.out.println ("Entry instantiated.");
+		
+		// wake up the IO class
+		IO.class.getName ();
 	}
 	
 	private int getMode ()
