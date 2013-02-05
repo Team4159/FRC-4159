@@ -31,15 +31,15 @@ public class IO
 	/****************************************
 	 * MOTORS                               *
 	 ****************************************/
-	public static final Talon driveLeftFront = new Talon (1);
-	public static final Talon driveLeftRear = new Talon (2);
-	public static final Talon driveRightFront = new Talon (3);
-	public static final Talon driveRightRear = new Talon (4);
+	public static final Talon driveMotorLeftFront = new Talon (1);
+	public static final Talon driveMotorLeftRear = new Talon (2);
+	public static final Talon driveMotorRightFront = new Talon (3);
+	public static final Talon driveMotorRightRear = new Talon (4);
 	
-	public static final CombinedMotor driveLeftCombined =
-		new CombinedMotor (driveLeftFront, driveLeftRear);
-	public static final CombinedMotor driveRightCombined =
-		new CombinedMotor (driveRightFront, driveRightRear);
+	public static final CombinedMotor driveMotorLeftCombined =
+		new CombinedMotor (driveMotorLeftFront, driveMotorLeftRear);
+	public static final CombinedMotor driveMotorRightCombined =
+		new CombinedMotor (driveMotorRightFront, driveMotorRightRear);
 	
 	/****************************************
 	 * RELAYS                               *
@@ -49,20 +49,20 @@ public class IO
 	/****************************************
 	 * SOLENOIDS                            *
 	 ****************************************/
-	public static final DoubleSolenoid driveLeftGearbox = new DoubleSolenoid (1, 2);
-	public static final DoubleSolenoid driveRightGearbox = new DoubleSolenoid (3, 4);
+	public static final DoubleSolenoid driveGearboxLeft = new DoubleSolenoid (1, 2);
+	public static final DoubleSolenoid driveGearboxRight = new DoubleSolenoid (3, 4);
 	
 	/****************************************
 	 * SENSORS                              *
 	 ****************************************/
-	public static final Encoder driveLeftEncoder = new Encoder (1, 2);
-	public static final Encoder driveRightEncoder = new Encoder (3, 4);
+	public static final Encoder driveEncoderLeft = new Encoder (1, 2);
+	public static final Encoder driveEncoderRight = new Encoder (3, 4);
 	static {
 		final double distancePerPulse = 0.0001; // FIX ME!!!!!!
-		driveLeftEncoder.setDistancePerPulse (distancePerPulse);
-		driveRightEncoder.setDistancePerPulse (distancePerPulse);
-		driveLeftEncoder.start ();
-		driveRightEncoder.start ();
+		driveEncoderLeft.setDistancePerPulse (distancePerPulse);
+		driveEncoderRight.setDistancePerPulse (distancePerPulse);
+		driveEncoderLeft.start ();
+		driveEncoderRight.start ();
 	}
 	
 	public static final DigitalInput pressureSwitch = new DigitalInput (5);

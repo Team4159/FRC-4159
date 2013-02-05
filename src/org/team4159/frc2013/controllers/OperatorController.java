@@ -7,7 +7,7 @@ import org.team4159.support.Controller;
 
 public class OperatorController extends Controller 
 {
-	private final RobotDrive drive = new RobotDrive (IO.driveLeftCombined, IO.driveRightCombined);
+	private final RobotDrive drive = new RobotDrive (IO.driveMotorLeftCombined, IO.driveMotorRightCombined);
 	
 	public boolean active ()
 	{
