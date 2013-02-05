@@ -26,6 +26,9 @@ public class IO
 	public static final double DRIVE_KD = 0.0;
 	
 	// To avoid changes, make sure all declarations are "public static final".
+	static {
+		System.out.println ("Initializing IO ...");
+	}
 	
 	/****************************************
 	 * JOYSTICKS                            *
@@ -82,4 +85,8 @@ public class IO
 	
 	// private constructor to prevent instantiation
 	private IO () {}
+	
+	static {
+		System.out.println ("IO ready.");
+	}
 }

@@ -17,15 +17,18 @@ public abstract class Controller
 	private long timingStart;
 	private long timingAccumulator;
 	
+	public final int controllerMode;
+	
 	protected final DriverStation driverStation = DriverStation.getInstance ();
 	
-	protected Controller ()
+	protected Controller (int mode)
 	{
-		this (Entry.TICK_INTERVAL_MS);
+		this (mode, Entry.TICK_INTERVAL_MS);
 	}
 	
-	protected Controller (long interval)
+	protected Controller (int mode, long interval)
 	{
+		controllerMode = mode;
 		timingInterval = interval;
 		resetTiming ();
 	}
@@ -56,7 +59,10 @@ public abstract class Controller
 		timingAccumulator = 0;
 	}
 	
-	public abstract boolean active ();
+	public final boolean active ()
+	{
+		return ModeEnumerator.getMode () == controllerMode;
+	}
 	
 	public void tick ()
 	{

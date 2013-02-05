@@ -1,11 +1,12 @@
 package org.team4159.frc2013.controllers;
 
 import org.team4159.support.Controller;
+import org.team4159.support.ModeEnumerator;
 
 public class TestController extends Controller 
 {
-	public boolean active ()
+	public TestController ()
 	{
-		return driverStation.isEnabled () && driverStation.isTest ();
+		super (ModeEnumerator.TEST);
 	}
 }
