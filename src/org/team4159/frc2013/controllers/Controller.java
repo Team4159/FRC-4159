@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.team4159.frc2013;
+package org.team4159.frc2013.controllers;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import org.team4159.frc2013.Entry;
 
 /**
  *
