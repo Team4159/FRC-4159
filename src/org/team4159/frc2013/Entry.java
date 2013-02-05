@@ -1,5 +1,11 @@
+package org.team4159.frc2013;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import org.team4159.frc2013.controllers.AutonomousController;
+import org.team4159.frc2013.controllers.DisabledController;
+import org.team4159.frc2013.controllers.OperatorController;
+import org.team4159.frc2013.controllers.TestController;
 
 public class Entry extends RobotBase
 {
@@ -9,6 +15,13 @@ public class Entry extends RobotBase
 		MODE_AUTONOMOUS = 2,
 		MODE_OPERATOR = 3,
 		MODE_TEST = 4;
+	
+	public static final int TICK_INTERVAL_MS = 20;
+	
+	public Entry ()
+	{
+		System.out.println ("Entry instantiated.");
+	}
 	
 	private int getMode ()
 	{
@@ -23,7 +36,7 @@ public class Entry extends RobotBase
 			return MODE_OPERATOR;
 	}
 	
-	private Controller getController (int ct)
+	private Controller createController (int ct)
 	{
 		switch (ct)
 		{
@@ -34,7 +47,7 @@ public class Entry extends RobotBase
 			case MODE_OPERATOR:
 				return new OperatorController ();
 			case MODE_TEST:
-				return new Testcontroller ();
+				return new TestController ();
 			default:
 				throw new IllegalArgumentException ("unknown controller code");
 		}
@@ -42,6 +55,8 @@ public class Entry extends RobotBase
 	
 	public void startCompetition ()
 	{
+		System.out.println ("Entry.startCompetition() called.");
+		
 		int current_mode = MODE_UNKNOWN;
 		Controller controller = null;
 		
@@ -50,6 +65,7 @@ public class Entry extends RobotBase
 			int next_mode = getMode ();
 			if (current_mode != next_mode)
 				controller = createController (current_mode = next_mode);
+			controller.run ();
 		}
 	}
 }
