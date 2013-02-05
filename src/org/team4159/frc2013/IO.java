@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.HiTechnicColorSensor;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.Talon;
@@ -20,6 +21,10 @@ import org.team4159.support.CombinedMotor;
  */
 public class IO
 {
+	public static final double DRIVE_KP = 0.5;
+	public static final double DRIVE_KI = 0.1;
+	public static final double DRIVE_KD = 0.0;
+	
 	// To avoid changes, make sure all declarations are "public static final".
 	
 	/****************************************
@@ -27,30 +32,6 @@ public class IO
 	 ****************************************/
 	public static final Joystick joystick1 = new Joystick (1);
 	public static final Joystick joystick2 = new Joystick (2);
-	
-	/****************************************
-	 * MOTORS                               *
-	 ****************************************/
-	public static final Talon driveMotorLeftFront = new Talon (1);
-	public static final Talon driveMotorLeftRear = new Talon (2);
-	public static final Talon driveMotorRightFront = new Talon (3);
-	public static final Talon driveMotorRightRear = new Talon (4);
-	
-	public static final CombinedMotor driveMotorLeftCombined =
-		new CombinedMotor (driveMotorLeftFront, driveMotorLeftRear);
-	public static final CombinedMotor driveMotorRightCombined =
-		new CombinedMotor (driveMotorRightFront, driveMotorRightRear);
-	
-	/****************************************
-	 * RELAYS                               *
-	 ****************************************/
-	public static final Relay pneumaticPump = new Relay (1, Relay.Direction.kForward);
-	
-	/****************************************
-	 * SOLENOIDS                            *
-	 ****************************************/
-	public static final DoubleSolenoid driveGearboxLeft = new DoubleSolenoid (1, 2);
-	public static final DoubleSolenoid driveGearboxRight = new DoubleSolenoid (3, 4);
 	
 	/****************************************
 	 * SENSORS                              *
@@ -69,6 +50,35 @@ public class IO
 	
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
+	
+	/****************************************
+	 * MOTORS                               *
+	 ****************************************/
+	public static final Talon driveMotorLeftFront = new Talon (1);
+	public static final Talon driveMotorLeftRear = new Talon (2);
+	public static final Talon driveMotorRightFront = new Talon (3);
+	public static final Talon driveMotorRightRear = new Talon (4);
+	
+	public static final CombinedMotor driveMotorLeft =
+		new CombinedMotor (driveMotorLeftFront, driveMotorLeftRear);
+	public static final CombinedMotor driveMotorRight =
+		new CombinedMotor (driveMotorRightFront, driveMotorRightRear);
+	
+	public static final PIDController drivePIDLeft =
+		new PIDController (DRIVE_KP, DRIVE_KI, DRIVE_KD, driveEncoderLeft, driveMotorLeft);
+	public static final PIDController drivePIDRight = 
+		new PIDController (DRIVE_KP, DRIVE_KI, DRIVE_KD, driveEncoderRight, driveMotorRight);
+	
+	/****************************************
+	 * RELAYS                               *
+	 ****************************************/
+	public static final Relay pneumaticPump = new Relay (1, Relay.Direction.kForward);
+	
+	/****************************************
+	 * SOLENOIDS                            *
+	 ****************************************/
+	public static final DoubleSolenoid driveGearboxLeft = new DoubleSolenoid (1, 2);
+	public static final DoubleSolenoid driveGearboxRight = new DoubleSolenoid (3, 4);
 	
 	// private constructor to prevent instantiation
 	private IO () {}
