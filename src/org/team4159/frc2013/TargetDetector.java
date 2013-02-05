@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.Image;
 import edu.wpi.first.wpilibj.image.LinearAverages;
 import edu.wpi.first.wpilibj.image.NIVision;
+import edu.wpi.first.wpilibj.image.NIVision.Rect;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import java.util.Vector;
@@ -21,7 +22,8 @@ import java.util.Vector;
  */
 public class TargetDetector extends Thread
 {
-	private static final double RECTANGULARITY_THRESHOLD = 0.5;
+	private static final double RECTANGULARITY_SCORE_THRESHOLD = 0.5;
+	private static final double ASPECT_RATIO_SCORE_THRESHOLD = 0.5;
 	
 	private boolean running = true;
 	private final Vector results = new Vector ();
@@ -51,11 +53,20 @@ public class TargetDetector extends Thread
 				
 				for (int i = 0, ii = filteredImage.getNumberParticles(); i < ii; i++)
 				{
-					if (scoreRectangularity (filteredImage, i) < RECTANGULARITY_THRESHOLD)
+					Rect rect = getBoundingRectangle (filteredImage, i);
+					
+					double rectangularityScore = scoreRectangularity (filteredImage, i, rect);
+					if (rectangularityScore < RECTANGULARITY_SCORE_THRESHOLD)
 						continue;
 
 					double outerAspectRatioScore = scoreAspectRatio (filteredImage, i, true);
 					double innerAspectRatioScore = scoreAspectRatio (filteredImage, i, false);
+					boolean couldBeOuter = outerAspectRatioScore >= ASPECT_RATIO_SCORE_THRESHOLD;
+					boolean couldBeInner = innerAspectRatioScore >= ASPECT_RATIO_SCORE_THRESHOLD;
+					if (!couldBeOuter && !couldBeInner)
+						continue;
+					
+					
 				}
 				
 				synchronized (results)
@@ -107,16 +118,27 @@ public class TargetDetector extends Thread
 		}
 	}
 	
-	private static double scoreRectangularity (BinaryImage image, int index)
+	private static Rect getBoundingRectangle (BinaryImage image, int index)
 		throws NIVisionException
 	{
-		int bbwidth = (int) NIVision.MeasureParticle (image.image, index, false,
-			NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_WIDTH);
-		int bbheight = (int) NIVision.MeasureParticle (image.image, index, false,
-			NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_HEIGHT);
+		return new Rect (
+			(int) NIVision.MeasureParticle (image.image, index, false,
+				NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_TOP),
+			(int) NIVision.MeasureParticle (image.image, index, false,
+				NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_LEFT),
+			(int) NIVision.MeasureParticle (image.image, index, false,
+				NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_HEIGHT),
+			(int) NIVision.MeasureParticle (image.image, index, false,
+				NIVision.MeasurementType.IMAQ_MT_BOUNDING_RECT_WIDTH)
+		);
+	}
+	
+	private static double scoreRectangularity (BinaryImage image, int index, Rect rect)
+		throws NIVisionException
+	{
 		double ptarea = NIVision.MeasureParticle (image.image, index, false,
 			NIVision.MeasurementType.IMAQ_MT_AREA);
-		long bbarea = bbwidth * bbheight;
+		long bbarea = rect.getWidth () * rect.getHeight ();
 		return bbarea != 0 ? (double) ptarea / bbarea : 0;
 	}
 	
@@ -129,6 +151,7 @@ public class TargetDetector extends Thread
 			NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
 		double idealAspectRatio = outer ? (62.0 / 29.0) : (62.0 / 20.0);
 		
-		
+		// check how close real is to ideal
+		return 1.0 - Math.abs (1.0 - idealAspectRatio * rectShort / rectLong);
 	}
 }
