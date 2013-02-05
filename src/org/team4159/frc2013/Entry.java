@@ -65,6 +65,8 @@ public class Entry extends RobotBase
 			int next_mode = getMode ();
 			if (current_mode != next_mode)
 				controller = createController (current_mode = next_mode);
+			
+			System.out.println ("Controller to " + controller.getClass ().getName ());
 			controller.run ();
 		}
 	}

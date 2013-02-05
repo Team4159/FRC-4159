@@ -9,7 +9,12 @@ public class AutonomousController extends Controller
 		return driverStation.isEnabled () && driverStation.isAutonomous ();
 	}
 	
-	public void tick ()
+	public void run ()
 	{
+		while (active ())
+		{
+			beginTiming ();
+			endTiming ();
+		}
 	}
 }

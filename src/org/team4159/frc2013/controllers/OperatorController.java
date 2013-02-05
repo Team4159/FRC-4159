@@ -9,7 +9,8 @@ public class OperatorController extends Controller
 		return driverStation.isEnabled () && driverStation.isOperatorControl ();
 	}
 	
-	public void run()
+	public void tick ()
 	{
+		
 	}
 }
