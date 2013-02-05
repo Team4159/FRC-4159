@@ -1,6 +1,6 @@
 package org.team4159.frc2013;
 
-import org.team4159.frc2013.controllers.Controller;
+import org.team4159.support.Controller;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.team4159.frc2013.controllers.AutonomousController;
