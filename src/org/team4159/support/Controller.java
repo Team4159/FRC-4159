@@ -13,11 +13,28 @@ import org.team4159.frc2013.Entry;
  */
 public abstract class Controller
 {
+	private static class ExitException extends RuntimeException {}
+	
+	private class ControllerThread extends Thread
+	{
+		public void run ()
+		{
+			try {
+				Controller.this.run ();
+			} catch (ExitException e) {}
+		}
+	}
+	
 	private final long timingInterval;
 	private long timingStart;
 	private long timingAccumulator;
 	
 	public final int controllerMode;
+	
+	private final Object controllerLock = new Object ();
+	private final ControllerThread controllerThread = new ControllerThread ();
+	private boolean controllerStarted = false;
+	private boolean controllerRunning = false;
 	
 	protected final DriverStation driverStation = DriverStation.getInstance ();
 	
@@ -59,6 +76,30 @@ public abstract class Controller
 		timingAccumulator = 0;
 	}
 	
+	protected final void sleep (long millis)
+	{
+		synchronized (controllerLock)
+		{
+			if (!controllerRunning)
+				throw new ExitException ();
+			
+			long end = System.currentTimeMillis () + millis;
+			while (true)
+			{
+				long remaining = end - System.currentTimeMillis ();
+				if (remaining <= 0)
+					break;
+				
+				try {
+					controllerLock.wait (remaining);
+				} catch (InterruptedException e) {}
+				
+				if (!controllerRunning)
+					throw new ExitException ();
+			}
+		}
+	}
+	
 	public final boolean active ()
 	{
 		return ModeEnumerator.getMode () == controllerMode;
@@ -77,5 +118,32 @@ public abstract class Controller
 			tick ();
 			endTiming ();
 		}
+	}
+	
+	public final void start ()
+	{
+		if (controllerStarted)
+			throw new IllegalStateException ("controller already started");
+		
+		controllerRunning = true;
+		controllerThread.start ();
+		controllerStarted = true;
+	}
+	
+	public final void stop ()
+	{
+		if (!controllerStarted)
+			throw new IllegalStateException ("controller not started");
+		
+		synchronized (controllerLock)
+		{
+			controllerRunning = false;
+			controllerLock.notifyAll ();
+		}
+		
+		while (controllerThread.isAlive ())
+			try {
+				controllerThread.join ();
+			} catch (InterruptedException e) {}
 	}
 }

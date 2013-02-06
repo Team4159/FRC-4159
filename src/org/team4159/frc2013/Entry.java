@@ -42,17 +42,19 @@ public class Entry extends RobotBase
 	{
 		System.out.println ("Entry.startCompetition() called.");
 		
-		int current_mode = ModeEnumerator.UNKNOWN;
-		Controller controller = null;
-		
 		while (true)
 		{
-			int next_mode = ModeEnumerator.getMode();
-			if (current_mode != next_mode)
-				controller = createController (current_mode = next_mode);
+			int mode = ModeEnumerator.getMode();
+			Controller controller = createController (mode);
 			
 			System.out.println ("Controller to " + controller.getClass ().getName ());
-			controller.run ();
+			
+			controller.start ();
+			while (ModeEnumerator.getMode () == mode)
+				try {
+					Thread.sleep (TICK_INTERVAL_MS);
+				} catch (InterruptedException e) {}
+			controller.stop ();
 		}
 	}
 }
