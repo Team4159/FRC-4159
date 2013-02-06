@@ -75,6 +75,9 @@ public class IO
 	 * RELAYS                               *
 	 ****************************************/
 	public static final Compressor pneumaticPump = new Compressor (5, 1);
+	static {
+		pneumaticPump.start ();
+	}
 	
 	/****************************************
 	 * SOLENOIDS                            *
