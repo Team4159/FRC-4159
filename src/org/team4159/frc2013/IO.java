@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Compressor;
 import org.team4159.support.CombinedMotor;
 
 /**
@@ -49,8 +50,6 @@ public class IO
 		driveEncoderRight.start ();
 	}
 	
-	public static final DigitalInput pressureSwitch = new DigitalInput (5);
-	
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
 	
@@ -75,7 +74,7 @@ public class IO
 	/****************************************
 	 * RELAYS                               *
 	 ****************************************/
-	public static final Relay pneumaticPump = new Relay (1, Relay.Direction.kForward);
+	public static final Compressor pneumaticPump = new Compressor (5, 1);
 	
 	/****************************************
 	 * SOLENOIDS                            *
