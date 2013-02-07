@@ -1,5 +1,6 @@
 package org.team4159.frc2013.controllers;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.RobotDrive;
 import org.team4159.frc2013.IO;
 import org.team4159.frc2013.Periodic;
@@ -15,10 +16,22 @@ public class OperatorController extends Controller
 		super (ModeEnumerator.OPERATOR);
 	}
 	
+	private void shiftGearbox ()
+	{
+		boolean shiftUp = IO.joystick2.getRawButton (3);
+		boolean shiftDown = IO.joystick2.getRawButton (2);
+		if (shiftUp ^ shiftDown)
+		{
+			Value val = shiftUp ? Value.kForward : Value.kReverse;
+			IO.driveGearboxLeft.set (val);
+			IO.driveGearboxRight.set (val);
+		}
+	}
+	
 	public void tick ()
 	{
 		Periodic.tick ();
-		
-		drive.arcadeDrive (IO.joystick1);
+		shiftGearbox ();
+		drive.tankDrive (IO.joystick1, IO.joystick2);
 	}
 }

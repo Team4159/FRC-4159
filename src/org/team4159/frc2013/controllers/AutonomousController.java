@@ -16,6 +16,7 @@ public class AutonomousController extends Controller
 	{
 		// remember to use this.sleep() in case autonomous mode
 		// ends early
+		// make sure that only sleep() blocks
 		
 		IO.driveMotorLeft.set (0.1);
 		sleep (1000);
