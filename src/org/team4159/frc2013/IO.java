@@ -56,15 +56,8 @@ public class IO
 	/****************************************
 	 * MOTORS                               *
 	 ****************************************/
-	public static final Talon driveMotorLeftFront = new Talon (1);
-	public static final Talon driveMotorLeftRear = new Talon (2);
-	public static final Talon driveMotorRightFront = new Talon (3);
-	public static final Talon driveMotorRightRear = new Talon (4);
-	
-	public static final CombinedMotor driveMotorLeft =
-		new CombinedMotor (driveMotorLeftFront, driveMotorLeftRear);
-	public static final CombinedMotor driveMotorRight =
-		new CombinedMotor (driveMotorRightFront, driveMotorRightRear);
+	public static final Talon driveMotorLeft = new Talon (1);
+	public static final Talon driveMotorRight = new Talon (2);
 	
 	public static final PIDController drivePIDLeft =
 		new PIDController (DRIVE_KP, DRIVE_KI, DRIVE_KD, driveEncoderLeft, driveMotorLeft);
