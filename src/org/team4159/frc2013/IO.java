@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import org.team4159.support.CombinedMotor;
 
 /**
@@ -77,6 +78,11 @@ public class IO
 	 ****************************************/
 	public static final DoubleSolenoid driveGearboxLeft = new DoubleSolenoid (1, 2);
 	public static final DoubleSolenoid driveGearboxRight = new DoubleSolenoid (3, 4);
+	static {
+		final Value val = Value.kForward;
+		driveGearboxLeft.set (val);
+		driveGearboxRight.set (val);
+	}
 	
 	// private constructor to prevent instantiation
 	private IO () {}
