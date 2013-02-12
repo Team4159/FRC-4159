@@ -51,7 +51,7 @@ public class IO
 		driveEncoderRight.start ();
 	}
 	
-	public static final HiTechnicColorSensor frisbeeColorSensor =
+	/*public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
 	
 	/****************************************

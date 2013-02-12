@@ -25,6 +25,7 @@ public class OperatorController extends Controller
 			Value val = shiftUp ? Value.kForward : Value.kReverse;
 			IO.driveGearboxLeft.set (val);
 			IO.driveGearboxRight.set (val);
+                        System.out.println ("shifted up: " + shiftUp);
 		}
 	}
 	
