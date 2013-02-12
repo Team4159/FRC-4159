@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.image.ColorImage;
 import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.Image;
 import edu.wpi.first.wpilibj.image.LinearAverages;
+import edu.wpi.first.wpilibj.image.LinearAverages.LinearAveragesMode;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVision.Rect;
 import edu.wpi.first.wpilibj.image.NIVisionException;
@@ -22,8 +23,28 @@ import java.util.Vector;
  */
 public class TargetDetector extends Thread
 {
+	public class Target
+	{
+		double centerX;
+		double centerY;
+		int targetType;
+	}
+	
+	private static final int TARGET_OUTER = 1;
+	private static final int TARGET_INNER = 2;
+	
+	private static final int EDGE_X = 3;
+	private static final int EDGE_Y = 4;
+	
 	private static final double RECTANGULARITY_SCORE_THRESHOLD = 0.5;
 	private static final double ASPECT_RATIO_SCORE_THRESHOLD = 0.5;
+	private double X_EDGE_SCORE_THRESHOLD = 0.7;
+	private double Y_EDGE_SCORE_THRESHOLD = 0.7;
+	
+	private static final double xMax[] = { 1, 1, 1, 1, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, 1, 1, 1, 1 };
+	private static final double xMin[] = { .4, .6, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, .1, 0.6, 0 };
+	private static final double yMax[] = { 1, 1, 1, 1, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, 1, 1, 1, 1 };
+	private static final double yMin[] = { .4, .6, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .05, .6, 0 };
 	
 	private boolean running = true;
 	private final Vector results = new Vector ();
@@ -59,14 +80,32 @@ public class TargetDetector extends Thread
 					if (rectangularityScore < RECTANGULARITY_SCORE_THRESHOLD)
 						continue;
 
-					double outerAspectRatioScore = scoreAspectRatio (filteredImage, i, true);
-					double innerAspectRatioScore = scoreAspectRatio (filteredImage, i, false);
+					double outerAspectRatioScore = scoreAspectRatio (filteredImage, i, TARGET_OUTER);
+					double innerAspectRatioScore = scoreAspectRatio (filteredImage, i, TARGET_INNER);
 					boolean couldBeOuter = outerAspectRatioScore >= ASPECT_RATIO_SCORE_THRESHOLD;
 					boolean couldBeInner = innerAspectRatioScore >= ASPECT_RATIO_SCORE_THRESHOLD;
 					if (!couldBeOuter && !couldBeInner)
 						continue;
 					
+					double xEdgeScore = scoreEdge (filteredImage, i, rect, EDGE_X);
+					double yEdgeScore = scoreEdge (filteredImage, i, rect, EDGE_Y);
+					if (xEdgeScore < X_EDGE_SCORE_THRESHOLD || yEdgeScore < Y_EDGE_SCORE_THRESHOLD)
+						continue;
 					
+					if (couldBeInner || couldBeOuter)
+					{
+						double cx = NIVision.MeasureParticle (image.image, i, false,
+							NIVision.MeasurementType.IMAQ_MT_CENTER_OF_MASS_X);
+						double cy = NIVision.MeasureParticle (image.image, i, false,
+							NIVision.MeasurementType.IMAQ_MT_CENTER_OF_MASS_Y);
+						System.out.println ((couldBeInner ? "inner" : "outer") + " target at (" + cx + "," + cy + ")");
+						
+						Target target = new Target ();
+						target.centerX = cx;
+						target.centerY = cy;
+						target.targetType = couldBeInner ? TARGET_INNER : TARGET_OUTER;
+						nextResults.addElement (target);
+					}
 				}
 				
 				synchronized (results)
@@ -142,16 +181,50 @@ public class TargetDetector extends Thread
 		return bbarea != 0 ? (double) ptarea / bbarea : 0;
 	}
 	
-	private static double scoreAspectRatio (BinaryImage image, int index, boolean outer)
+	private static double scoreAspectRatio (BinaryImage image, int index, int target)
 		throws NIVisionException
 	{
 		double rectLong = NIVision.MeasureParticle (image.image, index, false,
 			NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
 		double rectShort = NIVision.MeasureParticle (image.image, index, false,
 			NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
-		double idealAspectRatio = outer ? (62.0 / 29.0) : (62.0 / 20.0);
+		double idealAspectRatio = (target == TARGET_INNER) ? (62.0 / 20.0) : (62.0 / 29.0);
 		
 		// check how close real is to ideal
 		return 1.0 - Math.abs (1.0 - idealAspectRatio * rectShort / rectLong);
+	}
+	
+	private static double scoreEdge (BinaryImage image, int index, Rect rect, int edge)
+		throws NIVisionException
+	{
+		double total = 0;
+		LinearAverages la = NIVision.getLinearAverages (
+			image.image,
+			(edge == EDGE_X) ?
+				LinearAveragesMode.IMAQ_COLUMN_AVERAGES :
+				LinearAveragesMode.IMAQ_ROW_AVERAGES,
+			rect
+		);
+		
+		float[] averages = (edge == EDGE_X) ?
+			la.getColumnAverages () :
+			la.getRowAverages ();
+		
+		double[] min = (edge == EDGE_X) ? xMin : yMin;
+		double[] max = (edge == EDGE_X) ? xMax : yMax;
+		
+		for (int i = 0; i < averages.length; i++)
+		{
+			if (
+				min[i * min.length / averages.length] < averages[i]
+				&&
+				averages[i] < max[i * max.length / averages.length]
+			)
+			{
+				total++;
+			}
+		}
+		
+		return (double) total / averages.length;
 	}
 }
