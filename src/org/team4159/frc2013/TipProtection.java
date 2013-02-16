@@ -71,6 +71,11 @@ final class Vec
 			x * o.y - y * o.x
 		);
 	}
+	
+	public boolean zeroed ()
+	{
+		return (x == 0) && (y == 0) && (z == 0);
+	}
 }
 
 public class TipProtection
@@ -140,7 +145,7 @@ public class TipProtection
 			}
 		}
 		
-		if (!idle)
+		if (!idle && !gravity.zeroed ())
 		{
 			// subtract gravity vector
 			final Vec v = curAccel.sub (gravity);
