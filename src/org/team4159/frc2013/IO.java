@@ -4,6 +4,7 @@
  */
 package org.team4159.frc2013;
 
+import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.ADXL345_I2C.DataFormat_Range;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import org.team4159.support.CombinedMotor;
 
@@ -53,6 +55,9 @@ public class IO
 	
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
+	
+	public static final ADXL345_I2C accelerometer =
+		new ADXL345_I2C (SensorBase.getDefaultDigitalModule (), DataFormat_Range.k16G);
 	
 	/****************************************
 	 * MOTORS                               *
