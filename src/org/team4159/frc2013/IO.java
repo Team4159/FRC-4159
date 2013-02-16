@@ -53,8 +53,10 @@ public class IO
 		driveEncoderRight.start ();
 	}
 	
+/*
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
+*/
 	
 	public static final ADXL345_I2C accelerometer =
 		new ADXL345_I2C (SensorBase.getDefaultDigitalModule (), DataFormat_Range.k16G);
