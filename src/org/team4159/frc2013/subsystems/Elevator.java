@@ -76,6 +76,11 @@ public final class Elevator implements Subsystem
 		// switch touched, reset sensor there
 		IO.elevatorEncoder.reset ();
 		
+		// configure PID
+		IO.elevatorPID.setInputRange (-ELEVATOR_HEIGHT, 0);
+		IO.elevatorPID.setOutputRange (-1.0, 1.0);
+		IO.elevatorPID.reset ();
+		
 		// we are calibrated!
 		calibrated = true;
 	}
@@ -140,7 +145,7 @@ public final class Elevator implements Subsystem
 	public void setDistanceFromTop (double x)
 	{
 		IO.elevatorPID.reset ();
-		IO.elevatorPID.setSetpoint (x);
+		IO.elevatorPID.setSetpoint (-x);
 		IO.elevatorPID.enable ();
 	}
 	
@@ -162,6 +167,15 @@ public final class Elevator implements Subsystem
 	public boolean isAtSetpoint ()
 	{
 		return IO.elevatorPID.onTarget ();
+	}
+	
+	/**
+	 * Waits until the elevator is at the previously set position.
+	 */
+	public void waitUntilAtSetpoint ()
+	{
+		while (!isAtSetpoint ())
+			Controller.sleep (1);
 	}
 	
 	/**
