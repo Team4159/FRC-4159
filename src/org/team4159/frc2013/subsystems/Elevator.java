@@ -34,7 +34,7 @@ public final class Elevator implements Subsystem
 	 * bottom-most tray.
 	 */
 	public static final double[] TRAY_POSITIONS = { 5, 8, 11 };
-
+	
 	/**
 	 * The height (in inches) of the frisbee input relative to the bottom of the
 	 * range of movement.
@@ -46,6 +46,11 @@ public final class Elevator implements Subsystem
 	 * range of movement. 
 	 */
 	public static final double OUTPUT_POSITION = 40;
+	
+	/**
+	 * Number of trays.
+	 */
+	public static final int NUMBER_OF_TRAYS = TRAY_POSITIONS.length;
 	
 	/**
 	 * The tolerance (in inches) smaller than which the elevator can be considered
@@ -77,6 +82,7 @@ public final class Elevator implements Subsystem
 		IO.elevatorEncoder.reset ();
 		
 		// configure PID
+		IO.elevatorPID.setAbsoluteTolerance (SETPOINT_TOLERANCE);
 		IO.elevatorPID.setInputRange (-ELEVATOR_HEIGHT, 0);
 		IO.elevatorPID.setOutputRange (-1.0, 1.0);
 		IO.elevatorPID.reset ();
@@ -144,7 +150,6 @@ public final class Elevator implements Subsystem
 	 */
 	public void setDistanceFromTop (double x)
 	{
-		IO.elevatorPID.reset ();
 		IO.elevatorPID.setSetpoint (-x);
 		IO.elevatorPID.enable ();
 	}
@@ -160,8 +165,7 @@ public final class Elevator implements Subsystem
 	}
 	
 	/**
-	 * Checks whether the elevator is at the previously set position. The tolerance
-	 * can be set in the {@link IO} class.
+	 * Checks whether the elevator is at the previously set position.
 	 * @return true if the elevator is at the previously set position.
 	 */
 	public boolean isAtSetpoint ()

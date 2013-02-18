@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Encoder.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Victor;
 import org.team4159.frc2013.subsystems.Drive;
 import org.team4159.frc2013.subsystems.Elevator;
+import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.CombinedMotor;
 
 /**
@@ -94,12 +95,10 @@ public class IO
 		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderLeft, driveMotorLeft);
 	public static final PIDController drivePIDRight = 
 		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderRight, driveMotorRight);
+	public static final PIDController shooterPID =
+		new PIDController (Shooter.KP, Shooter.KI, Shooter.KD, shooterEncoder, shooterMotor);
 	public static final PIDController elevatorPID = 
 		new PIDController (Elevator.KP, Elevator.KI, Elevator.KD, elevatorEncoder, elevatorMotor);
-	
-	static {
-		elevatorPID.setAbsoluteTolerance (Elevator.SETPOINT_TOLERANCE);
-	}
 	
 	/****************************************
 	 * RELAYS                               *
