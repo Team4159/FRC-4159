@@ -20,7 +20,7 @@ public final class Elevator implements Subsystem
 	/**
 	 * The range of elevator movement in inches.
 	 */
-	public static final double ELEVATOR_HEIGHT = 200;
+	public static final double ELEVATOR_HEIGHT = 50;
 	
 	/**
 	 * The output level at which the motor should be set
@@ -29,26 +29,36 @@ public final class Elevator implements Subsystem
 	public static final double CALIBRATION_OUTPUT = 0.4;
 	
 	/**
-	 * The height of each tray relative to the bottom of the range of movement
-	 * when the elevator is at the bottom.
+	 * The height (in inches) of each tray relative to the bottom of the range of movement
+	 * when the elevator is at the bottom. The first element should represent the
+	 * bottom-most tray.
 	 */
-	public static final double[] TRAY_POSITIONS = { 10, 20, 30 };
+	public static final double[] TRAY_POSITIONS = { 5, 8, 11 };
 
 	/**
-	 * The height of the frisbee input relative to the bottom of the
+	 * The height (in inches) of the frisbee input relative to the bottom of the
 	 * range of movement.
 	 */
-	public static final double INPUT_POSITION = 40;
+	public static final double INPUT_POSITION = 12;
 	
 	/**
-	 * The height of the shooter output relative to the bottom of the
+	 * The height (in inches) of the shooter output relative to the bottom of the
 	 * range of movement. 
 	 */
-	public static final double OUTPUT_POSITION = 160;
+	public static final double OUTPUT_POSITION = 40;
+	
+	/**
+	 * The tolerance (in inches) smaller than which the elevator can be considered
+	 * to be at the proper position.
+	 */
+	public static final double SETPOINT_TOLERANCE = 0.2;
 	
 	public static final Elevator instance = new Elevator ();
 	
 	private boolean calibrated = false;
+	
+	// prevent instantiation, must access through #instance
+	private Elevator () {}
 
 	/**
 	 * Calibrates the elevator by moving elevator up until switch is activated,
@@ -152,5 +162,27 @@ public final class Elevator implements Subsystem
 	public boolean isAtSetpoint ()
 	{
 		return IO.elevatorPID.onTarget ();
+	}
+	
+	/**
+	 * Moves the specified tray to the frisbee pick-up.
+	 * @param n the tray to align to the pick-up (0 is bottom-most tray).
+	 * @see #getDistanceFromBottom()
+	 * @see #getDistanceFromTop()
+	 */
+	public void moveTrayToInput (int n)
+	{
+		setDistanceFromBottom (INPUT_POSITION - TRAY_POSITIONS[n]);
+	}
+	
+	/**
+	 * Moves the specified tray to the shooter.
+	 * @param n the tray to align to the pick-up (0 is bottom-most tray).
+	 * @see #getDistanceFromBottom()
+	 * @see #getDistanceFromTop()
+	 */
+	public void moveTrayToOutput (int n)
+	{
+		setDistanceFromBottom (OUTPUT_POSITION - TRAY_POSITIONS[n]);
 	}
 }

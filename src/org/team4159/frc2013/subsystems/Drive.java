@@ -13,7 +13,7 @@ public final class Drive extends RobotDrive implements Subsystem
 	
 	public static final Drive instance = new Drive ();
 	
-	public Drive ()
+	private Drive ()
 	{
 		super (IO.driveMotorLeft, IO.driveMotorRight);
 	}
