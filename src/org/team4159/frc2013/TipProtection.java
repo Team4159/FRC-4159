@@ -166,7 +166,7 @@ public class TipProtection
 				.add (k.cross (v).mult (sin_grav_Z))
 				.add (k.mult (k.dot (v) * (1 - cos_grav_Z)));
 			
-			System.out.println ("vy: " + vrot.y);
+			System.out.println ("vz: " + Math.abs (vrot.z));
 		}
 	}
 	
