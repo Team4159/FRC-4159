@@ -114,8 +114,12 @@ public class IO
 	 ****************************************/
 	public static final DoubleSolenoid driveGearbox = new DoubleSolenoid (1, 2);
 	static {
-		final Value val = Value.kForward;
-		driveGearbox.set (val);
+		driveGearbox.set (Value.kForward);
+	}
+	
+	public static final DoubleSolenoid shooterPiston = new DoubleSolenoid (3, 4);
+	static {
+		shooterPiston.set (Value.kReverse);
 	}
 	
 	// private constructor to prevent instantiation
