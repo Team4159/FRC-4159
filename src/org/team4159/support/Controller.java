@@ -5,6 +5,7 @@
 package org.team4159.support;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import org.team4159.frc2013.Entry;
 
 /**
@@ -14,14 +15,21 @@ import org.team4159.frc2013.Entry;
 public abstract class Controller
 {
 	private static class ExitException extends RuntimeException {}
+	private static Controller currentController = null;
 	
 	private class ControllerThread extends Thread
 	{
 		public void run ()
 		{
+			Controller lastController = currentController;
+			
 			try {
+				currentController = Controller.this;
 				Controller.this.run ();
-			} catch (ExitException e) {}
+			} catch (ExitException e) {
+			} finally {
+				currentController = lastController;
+			}
 		}
 	}
 	
@@ -76,30 +84,6 @@ public abstract class Controller
 		timingAccumulator = 0;
 	}
 	
-	protected final void sleep (long millis)
-	{
-		synchronized (controllerLock)
-		{
-			if (!controllerRunning)
-				throw new ExitException ();
-			
-			long end = System.currentTimeMillis () + millis;
-			while (true)
-			{
-				long remaining = end - System.currentTimeMillis ();
-				if (remaining <= 0)
-					break;
-				
-				try {
-					controllerLock.wait (remaining);
-				} catch (InterruptedException e) {}
-				
-				if (!controllerRunning)
-					throw new ExitException ();
-			}
-		}
-	}
-	
 	public final boolean active ()
 	{
 		return ModeEnumerator.getMode () == controllerMode;
@@ -145,5 +129,43 @@ public abstract class Controller
 			try {
 				controllerThread.join ();
 			} catch (InterruptedException e) {}
+	}
+	
+	private void _sleep (long millis)
+	{
+		synchronized (controllerLock)
+		{
+			if (!controllerRunning)
+				throw new ExitException ();
+			
+			long end = System.currentTimeMillis () + millis;
+			while (true)
+			{
+				long remaining = end - System.currentTimeMillis ();
+				if (remaining <= 0)
+					break;
+				
+				try {
+					controllerLock.wait (remaining);
+				} catch (InterruptedException e) {}
+				
+				if (!controllerRunning)
+					throw new ExitException ();
+			}
+		}
+	}
+	
+	public static void sleep (long millis)
+	{
+		if (currentController != null)
+		{
+			currentController._sleep (millis);
+		}
+		else
+		{
+			try {
+				Thread.sleep (millis);
+			} catch (InterruptedException e) {}
+		}
 	}
 }

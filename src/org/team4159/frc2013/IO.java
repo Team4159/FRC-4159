@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.ADXL345_I2C.DataFormat_Range;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Encoder.PIDSourceParameter;
+import org.team4159.frc2013.subsystems.Drive;
+import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.support.CombinedMotor;
 
 /**
@@ -25,10 +28,6 @@ import org.team4159.support.CombinedMotor;
  */
 public class IO
 {
-	public static final double DRIVE_KP = 0.5;
-	public static final double DRIVE_KI = 0.1;
-	public static final double DRIVE_KD = 0.0;
-	
 	// To avoid changes, make sure all declarations are "public static final".
 	static {
 		System.out.println ("Initializing IO ...");
@@ -53,6 +52,16 @@ public class IO
 		driveEncoderRight.start ();
 	}
 	
+	public static final Encoder elevatorEncoder = new Encoder (5, 6);
+	static {
+		final double distancePerPulse = 0.0001; // FIX ME!!!!!!
+		elevatorEncoder.setDistancePerPulse (distancePerPulse);
+		elevatorEncoder.setPIDSourceParameter (PIDSourceParameter.kDistance);
+		elevatorEncoder.start ();
+	}
+	
+	public static final DigitalInput elevatorTop = new DigitalInput (11);
+	
 /*
 	public static final HiTechnicColorSensor frisbeeColorSensor =
 		new HiTechnicColorSensor (SensorBase.getDefaultDigitalModule ());
@@ -66,11 +75,19 @@ public class IO
 	 ****************************************/
 	public static final Talon driveMotorLeft = new Talon (1);
 	public static final Talon driveMotorRight = new Talon (2);
+	public static final Talon elevatorMotor = new Talon (3);
 	
 	public static final PIDController drivePIDLeft =
-		new PIDController (DRIVE_KP, DRIVE_KI, DRIVE_KD, driveEncoderLeft, driveMotorLeft);
+		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderLeft, driveMotorLeft);
 	public static final PIDController drivePIDRight = 
-		new PIDController (DRIVE_KP, DRIVE_KI, DRIVE_KD, driveEncoderRight, driveMotorRight);
+		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderRight, driveMotorRight);
+	public static final PIDController elevatorPID = 
+		new PIDController (Elevator.KP, Elevator.KI, Elevator.KD, elevatorEncoder, elevatorMotor);
+	
+	static {
+		// FIXME: tolerance in WHAT UNITS and HOW MUCH
+		elevatorPID.setAbsoluteTolerance (1);
+	}
 	
 	/****************************************
 	 * RELAYS                               *
@@ -83,12 +100,10 @@ public class IO
 	/****************************************
 	 * SOLENOIDS                            *
 	 ****************************************/
-	public static final DoubleSolenoid driveGearboxLeft = new DoubleSolenoid (1, 2);
-	public static final DoubleSolenoid driveGearboxRight = new DoubleSolenoid (3, 4);
+	public static final DoubleSolenoid driveGearbox = new DoubleSolenoid (1, 2);
 	static {
 		final Value val = Value.kForward;
-		driveGearboxLeft.set (val);
-		driveGearboxRight.set (val);
+		driveGearbox.set (val);
 	}
 	
 	// private constructor to prevent instantiation

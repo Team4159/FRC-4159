@@ -47,7 +47,7 @@ public class Entry extends RobotBase
 			int mode = ModeEnumerator.getMode();
 			Controller controller = createController (mode);
 			
-			System.out.println ("Controller to " + controller.getClass ().getName ());
+			System.out.println ("Controller set to " + controller.getClass ().getName ());
 			
 			controller.start ();
 			while (ModeEnumerator.getMode () == mode)
