@@ -54,18 +54,18 @@ public final class Elevator implements Subsystem
 	/**
 	 * Lower motor output of deadzone.
 	 */
-	public static final double DEADZONE_LOWER = -0.4;
+	public static final double DEADZONE_LOWER = -0.42;
 	
 	/**
 	 * Upper motor output of deadzone.
 	 */
-	public static final double DEADZONE_UPPER = 0.2;
+	public static final double DEADZONE_UPPER = 0.22;
 	
-	public static final double SLOWDOWN_COEFFICIENT = 0.8;
-	public static final double SLOWDOWN_DISTANCE_UP = 420;
+	public static final double SLOWDOWN_COEFFICIENT = 0.80;
+	public static final double SLOWDOWN_DISTANCE_UP = 280;
 	public static final double SLOWDOWN_DISTANCE_DOWN = 420;
 	public static final double MAXIMUM_OUTPUT_UP = 1.0;
-	public static final double MAXIMUM_OUTPUT_DOWN = 0.75; 
+	public static final double MAXIMUM_OUTPUT_DOWN = 0.6; 
 	
 	/**
 	 * Singleton instance of this class.

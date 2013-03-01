@@ -97,6 +97,7 @@ public class OperatorController extends Controller
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
 		DriverStationLCD.setLine (1, "ShtEncX: " + IO.shooterEncoder.getDistance ());
 		DriverStationLCD.setLine (2, "ShtEncV: " + IO.shooterEncoder.getRate ());
+		DriverStationLCD.setLine (3, "ElevEnc: " + IO.elevatorEncoder.getDistance ());
 		
 		/*
 		if (ticks++ % 10 == 0)
