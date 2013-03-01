@@ -13,10 +13,17 @@ public class AutonomousController extends Controller
 		super (ModeEnumerator.AUTONOMOUS);
 	}
 	
+	/*
 	public void run ()
 	{
 		// remember to use this.sleep() in case autonomous mode ends early
 		// make sure that only sleep() blocks
+		
+		// retract shooter so elevator can move
+		Shooter.instance.retract ();
+		Controller.sleep (800);
+		
+		// calibrate elevator
 		Elevator.instance.calibrate ();
 		
 		// set shooter speed
@@ -28,12 +35,21 @@ public class AutonomousController extends Controller
 			Elevator.instance.moveTrayToOutput (i);
 			
 			Elevator.instance.waitUntilAtSetpoint ();
-			Shooter.instance.waitUntilAtSetpoint ();
+			Shooter.instance.waitForShooter ();
 			
 			Shooter.instance.extend ();
-			Controller.sleep (500);
+			Controller.sleep (800);
 			Shooter.instance.retract ();
-			Controller.sleep (500);
+			Controller.sleep (800);
 		}
+	}
+	*/
+	
+	public void run ()
+	{
+		long start = System.currentTimeMillis ();
+		Elevator.instance.calibrate ();
+		long elapsed = System.currentTimeMillis () - start;
+		System.out.println ("calibrated! (took " + elapsed + " ms)");
 	}
 }

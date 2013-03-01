@@ -12,55 +12,54 @@ import org.team4159.support.Subsystem;
 public final class Elevator implements Subsystem
 {
 	// PID constants
-	public static final double KP = 0.2;
-	public static final double KI = 0.0;
-	public static final double KD = 0.0;
+	public static final double KP_down = 0.006;
+	public static final double KI_down = 0.000;
+	public static final double KD_down = 0.000;
 	
-	// FIXME: set ELEVATOR_HEIGHT to range of elevator motion
+	public static final double KP_up = 0.024;
+	public static final double KI_up = 0.000;
+	public static final double KD_up = 0.000;
+	
 	/**
-	 * The range of elevator movement in inches.
+	 * Elevator height.
 	 */
-	public static final double ELEVATOR_HEIGHT = 50;
+	public static final double ELEVATOR_HEIGHT = 1289;
 	
 	/**
 	 * The output level at which the motor should be set
 	 * during calibration. 
 	 */
-	public static final double CALIBRATION_OUTPUT = 0.4;
+	public static final double CALIBRATION_OUTPUT = 0.45;
 	
 	/**
-	 * The height (in inches) of each tray relative to the bottom of the range of movement
-	 * when the elevator is at the bottom. The first element should represent the
+	 * The height of each tray relative to the top of the range of movement
+	 * at the output. The first element should represent the
 	 * bottom-most tray.
 	 */
-	public static final double[] TRAY_POSITIONS = { 5, 8, 11 };
+	public static final double[] TRAY_OUTPUT_POSITIONS = { 16, 82, 155 };
 	
 	/**
-	 * The height (in inches) of the frisbee input relative to the bottom of the
-	 * range of movement.
+	 * The height of each tray relative to the top of the range of movement
+	 * at the input. The first element should represent the
+	 * bottom-most tray.
 	 */
-	public static final double INPUT_POSITION = 12;
-	
-	/**
-	 * The height (in inches) of the shooter output relative to the bottom of the
-	 * range of movement. 
-	 */
-	public static final double OUTPUT_POSITION = 40;
+	public static final double[] TRAY_INPUT_POSITIONS = { 1137, 1210, 1281 };
 	
 	/**
 	 * Number of trays.
 	 */
-	public static final int NUMBER_OF_TRAYS = TRAY_POSITIONS.length;
+	public static final int NUMBER_OF_TRAYS = TRAY_OUTPUT_POSITIONS.length;
 	
 	/**
-	 * The tolerance (in inches) smaller than which the elevator can be considered
+	 * The tolerance smaller than which the elevator can be considered
 	 * to be at the proper position.
 	 */
-	public static final double SETPOINT_TOLERANCE = 0.2;
+	public static final double SETPOINT_TOLERANCE = 2.0;
 	
 	public static final Elevator instance = new Elevator ();
 	
 	private boolean calibrated = false;
+	private boolean[] trayFilled = new boolean[NUMBER_OF_TRAYS];
 	
 	// prevent instantiation, must access through #instance
 	private Elevator () {}
@@ -72,18 +71,20 @@ public final class Elevator implements Subsystem
 	public void calibrate ()
 	{
 		// set elevator motor to calibration output
-		IO.elevatorMotor.set (CALIBRATION_OUTPUT);
+		IO.elevatorMotor.set (-CALIBRATION_OUTPUT);
 		
 		// wait for switch to be touched
 		while (!isAtTop ())
 			Controller.sleep (1);
 		
-		// switch touched, reset sensor there
+		// switch touched, reset and configure sensor here
+		IO.elevatorEncoder.setMaxPeriod (0.25);
+		IO.elevatorEncoder.setMinRate (0.25);
 		IO.elevatorEncoder.reset ();
 		
 		// configure PID
 		IO.elevatorPID.setAbsoluteTolerance (SETPOINT_TOLERANCE);
-		IO.elevatorPID.setInputRange (-ELEVATOR_HEIGHT, 0);
+		IO.elevatorPID.setInputRange (0, ELEVATOR_HEIGHT);
 		IO.elevatorPID.setOutputRange (-1.0, 1.0);
 		IO.elevatorPID.reset ();
 		
@@ -127,16 +128,16 @@ public final class Elevator implements Subsystem
 	
 	/**
 	 * Gets the distance between the elevator and maximum height.
-	 * @return distance in [UNITS]
+	 * @return distance in inches
 	 */
 	public double getDistanceFromTop ()
 	{
-		return -IO.elevatorEncoder.getDistance ();
+		return IO.elevatorEncoder.getDistance ();
 	}
 	
 	/**
 	 * Gets the distance between the elevator and minimum height.
-	 * @return distance in [UNITS]
+	 * @return distance in inches
 	 */
 	public double getDistanceFromBottom ()
 	{
@@ -150,8 +151,22 @@ public final class Elevator implements Subsystem
 	 */
 	public void setDistanceFromTop (double x)
 	{
-		IO.elevatorPID.setSetpoint (-x);
+		if (!calibrated)
+			throw new IllegalStateException ("not calibrated");
+	
+		/*
+		double current = IO.elevatorEncoder.getDistance ();
+		if (x >= current)
+			IO.elevatorPID.setPID (KP_down, KI_down, KD_down);
+		else
+			IO.elevatorPID.setPID (KP_up, KI_up, KD_up);
+		*/
+		
+		IO.elevatorPID.setSetpoint (x);
+		IO.elevatorPID.reset ();
 		IO.elevatorPID.enable ();
+		
+		System.out.println ("Set DFT to " + x);
 	}
 	
 	/**
@@ -190,7 +205,7 @@ public final class Elevator implements Subsystem
 	 */
 	public void moveTrayToInput (int n)
 	{
-		setDistanceFromBottom (INPUT_POSITION - TRAY_POSITIONS[n]);
+		setDistanceFromTop (TRAY_INPUT_POSITIONS[n]);
 	}
 	
 	/**
@@ -201,6 +216,109 @@ public final class Elevator implements Subsystem
 	 */
 	public void moveTrayToOutput (int n)
 	{
-		setDistanceFromBottom (OUTPUT_POSITION - TRAY_POSITIONS[n]);
+		setDistanceFromTop (TRAY_OUTPUT_POSITIONS[n]);
+	}
+	
+	/**
+	 * Moves the lower-most empty tray to pick-up.
+	 */
+	public void moveEmptyTrayToInput ()
+	{
+		for (int i = 0; i < NUMBER_OF_TRAYS; i++)
+		{
+			if (!trayFilled[i])
+			{
+				moveTrayToInput (i);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Moves the upper-most filled tray to shooter.
+	 */
+	public void moveFilledTrayToOutput ()
+	{
+		for (int i = NUMBER_OF_TRAYS - 1; i >= 0; i--)
+		{
+			if (trayFilled[i])
+			{
+				moveTrayToOutput (i);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Marks a tray as filled.
+	 * @param n tray to mark as filled.
+	 */
+	public void fillTray (int n)
+	{
+		trayFilled[n] = true;
+	}
+	
+	/**
+	 * Marks a tray as empty.
+	 * @param n tray to mark as empty.
+	 */
+	public void emptyTray (int n)
+	{
+		trayFilled[n] = false;
+	}
+	
+	/**
+	 * Marks all trays as filled.
+	 */
+	public void fillAllTrays ()
+	{
+		for (int i = 0; i < NUMBER_OF_TRAYS; i++)
+			trayFilled[i] = true;
+	}
+	
+	/**
+	 * Marks all trays as empty.
+	 */
+	public void emptyAllTrays ()
+	{
+		for (int i = 0; i < NUMBER_OF_TRAYS; i++)
+			trayFilled[i] = false;
+	}
+	
+	/**
+	 * Checks whether all trays are empty.
+	 * @return true if all trays are empty and
+	 *         none of the trays are filled.
+	 */
+	public boolean traysAreEmpty ()
+	{
+		for (int i = 0; i < NUMBER_OF_TRAYS; i++)
+			if (trayFilled[i])
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Checks whether all trays are filled.
+	 * @return true if all trays are filled and
+	 *         there are no empty trays.
+	 */
+	public boolean traysAreFilled ()
+	{
+		for (int i = 0; i < NUMBER_OF_TRAYS; i++)
+			if (!trayFilled[i])
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Directly sets the elevator motor output. Note that PID is disabled
+	 * when this function is called.
+	 * @param x the output to which the motor should be set.
+	 */
+	public void setMotorOutput (double x)
+	{
+		IO.elevatorPID.disable ();
+		IO.elevatorMotor.set (x);
 	}
 }

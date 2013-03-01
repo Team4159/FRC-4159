@@ -53,9 +53,9 @@ public class IO
 	public static final Encoder driveEncoderLeft = new Encoder (5, 6);
 	public static final Encoder driveEncoderRight = new Encoder (7, 8);
 	static {
-		final double distancePerPulse = 0.0001; // FIX ME!!!!!! (inches per pulse)
-		driveEncoderLeft.setDistancePerPulse (distancePerPulse);
-		driveEncoderRight.setDistancePerPulse (distancePerPulse);
+		final double inchesPerPulse = 0.0001; // FIX ME!!!!!! (inches per pulse)
+		driveEncoderLeft.setDistancePerPulse (inchesPerPulse);
+		driveEncoderRight.setDistancePerPulse (inchesPerPulse);
 		driveEncoderLeft.setPIDSourceParameter (PIDSourceParameter.kDistance);
 		driveEncoderRight.setPIDSourceParameter (PIDSourceParameter.kDistance);
 		driveEncoderLeft.start ();
@@ -64,8 +64,7 @@ public class IO
 	
 	public static final Encoder elevatorEncoder = new Encoder (9, 10);
 	static {
-		final double distancePerPulse = 0.0001; // FIX ME!!!!!! (inches per pulse)
-		elevatorEncoder.setDistancePerPulse (distancePerPulse);
+		elevatorEncoder.setDistancePerPulse (1.0);
 		elevatorEncoder.setPIDSourceParameter (PIDSourceParameter.kDistance);
 		elevatorEncoder.start ();
 	}
@@ -98,12 +97,12 @@ public class IO
 	public static final PIDController shooterPID =
 		new PIDController (Shooter.KP, Shooter.KI, Shooter.KD, shooterEncoder, shooterMotor);
 	public static final PIDController elevatorPID = 
-		new PIDController (Elevator.KP, Elevator.KI, Elevator.KD, elevatorEncoder, elevatorMotor);
+		new PIDController (Elevator.KP_down, Elevator.KI_down, Elevator.KD_down, elevatorEncoder, elevatorMotor);
 	
 	/****************************************
 	 * RELAYS                               *
 	 ****************************************/
-	public static final Compressor pneumaticPump = new Compressor (5, 1);
+	public static final Compressor pneumaticPump = new Compressor (1, 1);
 	static {
 		pneumaticPump.start ();
 	}
@@ -119,6 +118,11 @@ public class IO
 	public static final DoubleSolenoid shooterPiston = new DoubleSolenoid (3, 4);
 	static {
 		shooterPiston.set (Value.kReverse);
+	}
+	
+	public static final DoubleSolenoid shooterAngler = new DoubleSolenoid (5, 6);
+	static {
+		shooterAngler.set (Value.kForward);
 	}
 	
 	// private constructor to prevent instantiation

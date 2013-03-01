@@ -16,6 +16,8 @@ public final class Drive extends RobotDrive implements Subsystem
 	private Drive ()
 	{
 		super (IO.driveMotorLeft, IO.driveMotorRight);
+		setInvertedMotor (MotorType.kRearLeft, true);
+		setInvertedMotor (MotorType.kRearRight, true);
 	}
 	
 	/**
