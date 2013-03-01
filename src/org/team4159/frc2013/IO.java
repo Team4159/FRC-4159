@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.HiTechnicColorSensor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -23,6 +24,7 @@ import org.team4159.frc2013.subsystems.Drive;
 import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.CombinedMotor;
+import org.team4159.support.DeadzoneCompensatedMotor;
 
 /**
  *
@@ -71,12 +73,13 @@ public class IO
 	
 	public static final Encoder shooterEncoder = new Encoder (11, 12);
 	static {
-		final double distancePerPulse = 0.0001; // FIX ME!!!!!! (revolutions per pulse)
-		shooterEncoder.setDistancePerPulse (distancePerPulse);
+		shooterEncoder.setDistancePerPulse (1.0);
 		shooterEncoder.setPIDSourceParameter (PIDSourceParameter.kRate);
 		shooterEncoder.start ();
 	}
 	
+	public static final Gyro gyroscope =
+		new Gyro (1);
 	public static final ADXL345_I2C accelerometer =
 		new ADXL345_I2C (SensorBase.getDefaultDigitalModule (), DataFormat_Range.k16G);
 	
@@ -86,7 +89,9 @@ public class IO
 	public static final Talon driveMotorLeft = new Talon (1);
 	public static final Talon driveMotorRight = new Talon (2);
 	public static final Talon shooterMotor = new Talon (3);
-	public static final Victor elevatorMotor = new Victor (4);
+	public static final Victor elevatorRawMotor = new Victor (4);
+	public static final DeadzoneCompensatedMotor elevatorMotor =
+		new DeadzoneCompensatedMotor (elevatorRawMotor, Elevator.DEADZONE_LOWER, Elevator.DEADZONE_UPPER);
 	public static final Victor innerPickupMotor = new Victor (5);
 	public static final Victor outerPickupMotor = new Victor (6);
 	
@@ -96,8 +101,6 @@ public class IO
 		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderRight, driveMotorRight);
 	public static final PIDController shooterPID =
 		new PIDController (Shooter.KP, Shooter.KI, Shooter.KD, shooterEncoder, shooterMotor);
-	public static final PIDController elevatorPID = 
-		new PIDController (Elevator.KP_down, Elevator.KI_down, Elevator.KD_down, elevatorEncoder, elevatorMotor);
 	
 	/****************************************
 	 * RELAYS                               *

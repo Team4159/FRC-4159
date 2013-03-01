@@ -48,7 +48,10 @@ public class AutonomousController extends Controller
 	public void run ()
 	{
 		long start = System.currentTimeMillis ();
+		
+		Shooter.instance.retract ();
 		Elevator.instance.calibrate ();
+		
 		long elapsed = System.currentTimeMillis () - start;
 		System.out.println ("calibrated! (took " + elapsed + " ms)");
 	}

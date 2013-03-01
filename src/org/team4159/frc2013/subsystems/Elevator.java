@@ -1,8 +1,12 @@
 package org.team4159.frc2013.subsystems;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import org.team4159.frc2013.IO;
 import org.team4159.support.Controller;
 import org.team4159.support.Subsystem;
+import com.sun.squawk.util.MathUtils;
+import edu.wpi.first.wpilibj.image.CurveOptions;
 
 /**
  * The {@link Elevator} class implements all code required to
@@ -11,15 +15,6 @@ import org.team4159.support.Subsystem;
  */
 public final class Elevator implements Subsystem
 {
-	// PID constants
-	public static final double KP_down = 0.006;
-	public static final double KI_down = 0.000;
-	public static final double KD_down = 0.000;
-	
-	public static final double KP_up = 0.024;
-	public static final double KI_up = 0.000;
-	public static final double KD_up = 0.000;
-	
 	/**
 	 * Elevator height.
 	 */
@@ -29,7 +24,7 @@ public final class Elevator implements Subsystem
 	 * The output level at which the motor should be set
 	 * during calibration. 
 	 */
-	public static final double CALIBRATION_OUTPUT = 0.45;
+	public static final double CALIBRATION_OUTPUT = 0.12;
 	
 	/**
 	 * The height of each tray relative to the top of the range of movement
@@ -56,13 +51,40 @@ public final class Elevator implements Subsystem
 	 */
 	public static final double SETPOINT_TOLERANCE = 2.0;
 	
+	/**
+	 * Lower motor output of deadzone.
+	 */
+	public static final double DEADZONE_LOWER = -0.4;
+	
+	/**
+	 * Upper motor output of deadzone.
+	 */
+	public static final double DEADZONE_UPPER = 0.2;
+	
+	public static final double SLOWDOWN_COEFFICIENT = 0.8;
+	public static final double SLOWDOWN_DISTANCE_UP = 420;
+	public static final double SLOWDOWN_DISTANCE_DOWN = 420;
+	public static final double MAXIMUM_OUTPUT_UP = 1.0;
+	public static final double MAXIMUM_OUTPUT_DOWN = 0.75; 
+	
+	/**
+	 * Singleton instance of this class.
+	 */
 	public static final Elevator instance = new Elevator ();
 	
 	private boolean calibrated = false;
 	private boolean[] trayFilled = new boolean[NUMBER_OF_TRAYS];
 	
+	private Timer setpointTaskTimer;
+	private boolean setpointEnabled = false;
+	private double setpointFromTop;
+	
 	// prevent instantiation, must access through #instance
-	private Elevator () {}
+	private Elevator ()
+	{
+		setpointTaskTimer = new Timer ();
+		setpointTaskTimer.scheduleAtFixedRate (new Task (), 0, 25);
+	}
 
 	/**
 	 * Calibrates the elevator by moving elevator up until switch is activated,
@@ -77,16 +99,13 @@ public final class Elevator implements Subsystem
 		while (!isAtTop ())
 			Controller.sleep (1);
 		
+		// stop elevator motor
+		IO.elevatorMotor.set (0);
+		
 		// switch touched, reset and configure sensor here
 		IO.elevatorEncoder.setMaxPeriod (0.25);
 		IO.elevatorEncoder.setMinRate (0.25);
 		IO.elevatorEncoder.reset ();
-		
-		// configure PID
-		IO.elevatorPID.setAbsoluteTolerance (SETPOINT_TOLERANCE);
-		IO.elevatorPID.setInputRange (0, ELEVATOR_HEIGHT);
-		IO.elevatorPID.setOutputRange (-1.0, 1.0);
-		IO.elevatorPID.reset ();
 		
 		// we are calibrated!
 		calibrated = true;
@@ -153,20 +172,9 @@ public final class Elevator implements Subsystem
 	{
 		if (!calibrated)
 			throw new IllegalStateException ("not calibrated");
-	
-		/*
-		double current = IO.elevatorEncoder.getDistance ();
-		if (x >= current)
-			IO.elevatorPID.setPID (KP_down, KI_down, KD_down);
-		else
-			IO.elevatorPID.setPID (KP_up, KI_up, KD_up);
-		*/
 		
-		IO.elevatorPID.setSetpoint (x);
-		IO.elevatorPID.reset ();
-		IO.elevatorPID.enable ();
-		
-		System.out.println ("Set DFT to " + x);
+		setpointFromTop = x;
+		synchronized (this) { setpointEnabled = true; }
 	}
 	
 	/**
@@ -185,7 +193,7 @@ public final class Elevator implements Subsystem
 	 */
 	public boolean isAtSetpoint ()
 	{
-		return IO.elevatorPID.onTarget ();
+		return Math.abs (IO.elevatorEncoder.getDistance () - setpointFromTop) <= SETPOINT_TOLERANCE;
 	}
 	
 	/**
@@ -318,7 +326,66 @@ public final class Elevator implements Subsystem
 	 */
 	public void setMotorOutput (double x)
 	{
-		IO.elevatorPID.disable ();
+		synchronized (this) { setpointEnabled = false; }
 		IO.elevatorMotor.set (x);
+	}
+	
+	public static final boolean USE_TASK = true;
+	
+	private class Task extends TimerTask
+	{
+		private double lastFromTop;
+		private double lastRate;
+		
+		public void run ()
+		{
+			double currentFromTop = IO.elevatorEncoder.getDistance ();
+			double currentRate = IO.elevatorEncoder.getRate ();
+			
+			try {
+				
+				double remaining = Math.abs (setpointFromTop - currentFromTop);
+				
+				if (remaining <= SETPOINT_TOLERANCE)
+				{
+					set (0);
+					return;
+				}
+				
+				if (setpointFromTop > currentFromTop)
+				{
+					// going down
+					if (remaining > SLOWDOWN_DISTANCE_DOWN)
+						set (MAXIMUM_OUTPUT_DOWN);
+					else
+						set (MAXIMUM_OUTPUT_DOWN * MathUtils.pow (remaining / SLOWDOWN_DISTANCE_DOWN, SLOWDOWN_COEFFICIENT));
+				}
+				else
+				{
+					// going up
+					if (remaining > SLOWDOWN_DISTANCE_UP)
+						set (-MAXIMUM_OUTPUT_UP);
+					else
+						set (-MAXIMUM_OUTPUT_UP * MathUtils.pow (remaining / SLOWDOWN_DISTANCE_UP, SLOWDOWN_COEFFICIENT));
+				}
+				
+			} finally {
+				
+				lastFromTop = currentFromTop;
+				lastRate = currentRate;
+				
+			}
+		}
+		
+		private void set (double x)
+		{
+			synchronized (Elevator.this)
+			{
+				if (setpointEnabled)
+				{
+					IO.elevatorMotor.set (x);
+				}
+			}
+		}
 	}
 }

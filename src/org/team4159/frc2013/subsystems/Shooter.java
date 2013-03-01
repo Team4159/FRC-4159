@@ -4,6 +4,7 @@ import org.team4159.frc2013.IO;
 import org.team4159.support.Controller;
 import org.team4159.support.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public final class Shooter implements Subsystem
 {
@@ -161,5 +162,15 @@ public final class Shooter implements Subsystem
 	{
 		IO.shooterPID.disable ();
 		IO.shooterMotor.set (x);
+	}
+	
+	public void raiseAngler ()
+	{
+		IO.shooterAngler.set (Value.kForward);
+	}
+	
+	public void lowerAngler ()
+	{
+		IO.shooterAngler.set (Value.kReverse);
 	}
 }

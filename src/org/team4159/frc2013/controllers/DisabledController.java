@@ -13,10 +13,12 @@ public class DisabledController extends Controller
 	
 	public void tick ()
 	{
+		/*
 		System.out.println (
 			"raw: " + IO.elevatorEncoder.get () +
 			"\t" + 
 			"elev: " + IO.elevatorEncoder.getDistance ()
 		);
+		*/
 	}
 }

@@ -78,7 +78,7 @@ final class Vec
 	}
 }
 
-public class TipProtection
+public class TipProtectionOld
 {
 	private static final long CHECK_INTERVAL_MS = 50;
 	private static final double IDLE_THRESHOLD = 0.1;
@@ -98,7 +98,7 @@ public class TipProtection
 	private boolean idle = true;
 	private int idleCount;
 	
-	private TipProtection ()
+	private TipProtectionOld ()
 	{
 		(new Timer ()).scheduleAtFixedRate (new TimerTask () {
 			public void run () { loop (); }
@@ -170,11 +170,11 @@ public class TipProtection
 		}
 	}
 	
-	private static TipProtection instance;
-	public static TipProtection getInstance ()
+	private static TipProtectionOld instance;
+	public static TipProtectionOld getInstance ()
 	{
 		if (instance == null)
-			instance = new TipProtection ();
+			instance = new TipProtectionOld ();
 		return instance;
 	}
 }
