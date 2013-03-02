@@ -47,6 +47,7 @@ public class AutonomousController extends Controller
 	
 	public void run ()
 	{
+		System.out.println ("calibrating ...");
 		long start = System.currentTimeMillis ();
 		
 		Shooter.instance.retract ();

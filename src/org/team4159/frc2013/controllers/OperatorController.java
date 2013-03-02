@@ -63,12 +63,14 @@ public class OperatorController extends Controller
 			Elevator.instance.moveTrayToInput (2);
 		*/
 		
+		/*
 		boolean elevatorUp = IO.joystick1.getRawButton (6);
 		boolean elevatorDown = IO.joystick1.getRawButton (7);
 		if (elevatorUp ^ elevatorDown)
 			Elevator.instance.setMotorOutput (elevatorDown ? 0.5 : -0.5);
 		else
 			Elevator.instance.setMotorOutput (0);
+		*/
 		
 		if (IO.joystick1.getRawButton (9))
 			Elevator.instance.moveTrayToOutput (0);

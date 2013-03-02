@@ -18,20 +18,20 @@ public final class Elevator implements Subsystem
 	/**
 	 * Elevator height.
 	 */
-	public static final double ELEVATOR_HEIGHT = 1289;
+	public static final double ELEVATOR_HEIGHT = 1300;
 	
 	/**
 	 * The output level at which the motor should be set
 	 * during calibration. 
 	 */
-	public static final double CALIBRATION_OUTPUT = 0.12;
+	public static final double CALIBRATION_OUTPUT = 0.22;
 	
 	/**
 	 * The height of each tray relative to the top of the range of movement
 	 * at the output. The first element should represent the
 	 * bottom-most tray.
 	 */
-	public static final double[] TRAY_OUTPUT_POSITIONS = { 16, 82, 155 };
+	public static final double[] TRAY_OUTPUT_POSITIONS = { 13.25, 81.5, 152. };
 	
 	/**
 	 * The height of each tray relative to the top of the range of movement
@@ -61,11 +61,12 @@ public final class Elevator implements Subsystem
 	 */
 	public static final double DEADZONE_UPPER = 0.22;
 	
-	public static final double SLOWDOWN_COEFFICIENT = 0.80;
-	public static final double SLOWDOWN_DISTANCE_UP = 280;
-	public static final double SLOWDOWN_DISTANCE_DOWN = 420;
+	public static final double INTEGRAL_COEFFICIENT = 0.0218;
+	public static final double SLOWDOWN_COEFFICIENT = 0.70;
+	public static final double SLOWDOWN_DISTANCE_UP = 200;
+	public static final double SLOWDOWN_DISTANCE_DOWN = 200;
 	public static final double MAXIMUM_OUTPUT_UP = 1.0;
-	public static final double MAXIMUM_OUTPUT_DOWN = 0.6; 
+	public static final double MAXIMUM_OUTPUT_DOWN = 0.8;
 	
 	/**
 	 * Singleton instance of this class.
@@ -171,7 +172,10 @@ public final class Elevator implements Subsystem
 	public void setDistanceFromTop (double x)
 	{
 		if (!calibrated)
-			throw new IllegalStateException ("not calibrated");
+		{
+			System.out.println ("warning: elevator not calibrated!");
+			return;
+		}
 		
 		setpointFromTop = x;
 		synchronized (this) { setpointEnabled = true; }
@@ -334,56 +338,66 @@ public final class Elevator implements Subsystem
 	
 	private class Task extends TimerTask
 	{
-		private double lastFromTop;
-		private double lastRate;
+		private boolean lastUp = false;
+		private double accumulatorFromTop = 0;
 		
 		public void run ()
 		{
 			double currentFromTop = IO.elevatorEncoder.getDistance ();
-			double currentRate = IO.elevatorEncoder.getRate ();
+			
+			double offset = setpointFromTop - currentFromTop;
+			if (Math.abs (offset) <= SETPOINT_TOLERANCE)
+			{
+				accumulatorFromTop = 0;
+				set (0);
+				return;
+			}
+			
+			boolean currentUp = offset < 0;
+			if (lastUp != currentUp)
+				accumulatorFromTop = 0;
+			lastUp = currentUp;
 			
 			try {
 				
-				double remaining = Math.abs (setpointFromTop - currentFromTop);
+				double output;
 				
-				if (remaining <= SETPOINT_TOLERANCE)
+				if (currentUp)
 				{
-					set (0);
-					return;
-				}
-				
-				if (setpointFromTop > currentFromTop)
-				{
-					// going down
-					if (remaining > SLOWDOWN_DISTANCE_DOWN)
-						set (MAXIMUM_OUTPUT_DOWN);
+					// going up
+					if (-offset > SLOWDOWN_DISTANCE_UP)
+						output = (-MAXIMUM_OUTPUT_UP);
 					else
-						set (MAXIMUM_OUTPUT_DOWN * MathUtils.pow (remaining / SLOWDOWN_DISTANCE_DOWN, SLOWDOWN_COEFFICIENT));
+						output = (-MAXIMUM_OUTPUT_UP * MathUtils.pow (-offset / SLOWDOWN_DISTANCE_UP, SLOWDOWN_COEFFICIENT));
 				}
 				else
 				{
-					// going up
-					if (remaining > SLOWDOWN_DISTANCE_UP)
-						set (-MAXIMUM_OUTPUT_UP);
+					// going down
+					if (offset > SLOWDOWN_DISTANCE_DOWN)
+						output = (MAXIMUM_OUTPUT_DOWN);
 					else
-						set (-MAXIMUM_OUTPUT_UP * MathUtils.pow (remaining / SLOWDOWN_DISTANCE_UP, SLOWDOWN_COEFFICIENT));
+						output = (MAXIMUM_OUTPUT_DOWN * MathUtils.pow (offset / SLOWDOWN_DISTANCE_DOWN, SLOWDOWN_COEFFICIENT));
 				}
 				
+				double add = accumulatorFromTop;
+				accumulatorFromTop += output * INTEGRAL_COEFFICIENT;
+				output += add;
+				set (output);
+				
 			} finally {
-				
-				lastFromTop = currentFromTop;
-				lastRate = currentRate;
-				
+				lastUp = currentUp;
 			}
 		}
 		
 		private void set (double x)
 		{
+			accumulatorFromTop += INTEGRAL_COEFFICIENT * x;
 			synchronized (Elevator.this)
 			{
 				if (setpointEnabled)
 				{
 					IO.elevatorMotor.set (x);
+					System.out.println ("motor to " + x);
 				}
 			}
 		}
