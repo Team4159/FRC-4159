@@ -47,10 +47,10 @@ public class OperatorController extends Controller
 	
 	public void tick ()
 	{
-		Drive.instance.arcadeDrive (IO.joystick1);
+		Drive.instance.arcadeDrive (IO.joystick2);
 		
-		boolean shiftDown = IO.joystick1.getRawButton (2);
-		boolean shiftUp = IO.joystick1.getRawButton (3);
+		boolean shiftDown = IO.joystick2.getRawButton (2);
+		boolean shiftUp = IO.joystick2.getRawButton (3);
 		if (shiftUp ^ shiftDown)
 			Drive.instance.setGearboxPosition (shiftUp);
 		

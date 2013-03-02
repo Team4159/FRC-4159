@@ -18,6 +18,7 @@ public class AutonomousController extends Controller
 		// make sure that only sleep() blocks
 		
 		// retract shooter so elevator can move
+                Shooter.instance.raiseAngler();
 		Shooter.instance.retract();
 		Controller.sleep(500);
 		// calibrate elevator
@@ -25,6 +26,7 @@ public class AutonomousController extends Controller
 		
 		// set shooter speed
 		Shooter.instance.setMotorOutput(1);
+                Controller.sleep(3000);
 		
 		// fire the frisbees
 		for (int i = Elevator.NUMBER_OF_TRAYS - 1; i >= 0; i--)
@@ -32,9 +34,12 @@ public class AutonomousController extends Controller
 			Elevator.instance.moveTrayToOutput (i);
 			
 			Elevator.instance.waitUntilAtSetpoint ();
-			
+			Controller.sleep(1000);
+                        
 			Shooter.instance.extend ();
+                        Controller.sleep (800);
 			Shooter.instance.retract ();
+                        Controller.sleep (800);
 		}
         }
 	

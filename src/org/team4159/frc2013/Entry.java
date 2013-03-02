@@ -41,6 +41,8 @@ public class Entry extends RobotBase
 	public void startCompetition ()
 	{
 		System.out.println ("Entry.startCompetition() called.");
+                
+                //new ImageSampler ().start ();
 		
 		while (true)
 		{
