@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
 
+/*
 final class Vec
 {
 	public final double x, y, z;
@@ -178,3 +179,4 @@ public class TipProtectionOld
 		return instance;
 	}
 }
+*/

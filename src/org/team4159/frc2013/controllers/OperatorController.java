@@ -1,5 +1,6 @@
 package org.team4159.frc2013.controllers;
 
+import org.team4159.frc2013.Entry;
 import org.team4159.frc2013.IO;
 import org.team4159.frc2013.subsystems.Drive;
 import org.team4159.frc2013.subsystems.Elevator;
@@ -7,6 +8,7 @@ import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.Controller;
 import org.team4159.support.DriverStationLCD;
 import org.team4159.support.ModeEnumerator;
+import org.team4159.support.filters.LowPassFilter;
 import com.sun.squawk.util.Arrays;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -59,6 +61,7 @@ class ShooterTest
 public class OperatorController extends Controller 
 {
     private boolean unjam = false;
+    private LowPassFilter shooterLPF = new LowPassFilter (5);
     
 	public OperatorController ()
 	{
@@ -148,9 +151,11 @@ public class OperatorController extends Controller
                 else{
                     IO.innerPickupMotor.set(0);
                 }
+                
+                shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + anglerUp);
                 DriverStationLCD.setLine (1, "Shooter Pwr: " + z );
-                DriverStationLCD.setLine (2, "Shooter speed rpm" + Shooter.instance.getSpeed());
+                DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
                 /*
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
 		DriverStationLCD.setLine (1, "ShtEncV: " + IO.shooterEncoder.getRate ());
