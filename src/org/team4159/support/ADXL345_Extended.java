@@ -94,13 +94,13 @@ public class ADXL345_Extended extends SensorBase
 			return;
 		}
 		
-		// start measurements
-		i2c.write (REG_POWER_CTL, MASK_POWER_CTL_Measure);
-		
 		// set data format
 		i2c.write (REG_DATA_FORMAT, MASK_DATA_FORMAT_FULL_RES | (0x03 << SHIFT_DATA_FORMAT_Range));
 		
 		// set sampling rate
 		i2c.write (REG_BW_RATE, VAL_BW_RATE_Rate_50 << SHIFT_BW_RATE_Rate);
+		
+		// start measurements
+		i2c.write (REG_POWER_CTL, MASK_POWER_CTL_Measure);
 	}
 }
