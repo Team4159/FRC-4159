@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.camera.AxisCamera;
 import org.team4159.frc2013.subsystems.Drive;
 import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.frc2013.subsystems.Shooter;
+import org.team4159.support.ADXL345_Extended;
 import org.team4159.support.CombinedMotor;
 import org.team4159.support.DeadzoneCompensatedMotor;
 
@@ -86,8 +87,8 @@ public class IO
 	
 	public static final Gyro gyroscope =
 		new Gyro (1);
-	public static final ADXL345_I2C accelerometer =
-		new ADXL345_I2C (SensorBase.getDefaultDigitalModule (), DataFormat_Range.k16G);
+	public static final ADXL345_Extended accelerometer =
+		new ADXL345_Extended ();
 	
 	/****************************************
 	 * MOTORS                               *

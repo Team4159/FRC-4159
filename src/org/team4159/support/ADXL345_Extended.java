@@ -9,6 +9,7 @@ public class ADXL345_Extended extends SensorBase
 	private static final byte I2C_ADDRESS = 0x3A;
 	private static final byte[] DEVID_EXPECTED = { (byte) 0xE5 };
 	private static final double GS_PER_LSB = 1.0 / 256;
+	private static final double MS2_PER_LSB = GS_PER_LSB * 9.80665;
 	
 	private static final byte
 		REG_DEVID = 0x00,
@@ -81,6 +82,7 @@ public class ADXL345_Extended extends SensorBase
 		VAL_BW_RATE_Rate_3200 = 15;
 	
 	private final I2C i2c;
+	private final byte[] data = new byte[2];
 	
 	public ADXL345_Extended ()
 	{
@@ -103,4 +105,14 @@ public class ADXL345_Extended extends SensorBase
 		// start measurements
 		i2c.write (REG_POWER_CTL, MASK_POWER_CTL_Measure);
 	}
+	
+	private double getAccel (int reg0)
+	{
+		i2c.read (reg0, 2, data);
+		return (data[0] | (data[1] << 8)) * MS2_PER_LSB;
+	}
+	
+	public double getX () { return getAccel (REG_DATAX0); }
+	public double getY () { return getAccel (REG_DATAY0); }
+	public double getZ () { return getAccel (REG_DATAZ0); }
 }
