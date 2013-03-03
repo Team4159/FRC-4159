@@ -38,8 +38,28 @@ class ElevatorTest
 	}
 }
 
+class ShooterTest
+{
+    private double[] samplesraw = new double[21];
+    private double[] samplessorted = new double[samplesraw.length];
+    private int samplesindex = 0;
+    
+    public void tick ()
+    {
+        samplesraw[samplesindex++] = IO.shooterEncoder.getRate ();
+        samplesindex = (samplesindex + 1) % samplesraw.length;
+        
+        System.arraycopy (samplesraw, 0, samplessorted, 0, samplesraw.length);
+        Arrays.sort (samplessorted);
+        
+        DriverStationLCD.setLine (1, "ShtMed: " + samplessorted[samplesraw.length / 2]);
+    }
+}
+
 public class OperatorController extends Controller 
 {
+    private boolean unjam = false;
+    
 	public OperatorController ()
 	{
 		super (ModeEnumerator.OPERATOR);
@@ -78,14 +98,41 @@ public class OperatorController extends Controller
 			Elevator.instance.moveTrayToOutput (1);
 		if (IO.joystick1.getRawButton (11))
 			Elevator.instance.moveTrayToOutput (2);
+                
+                {
+                    boolean newUnjam =
+                            IO.joystick2.getRawButton(6) ||
+                            IO.joystick2.getRawButton(7) ||
+                            IO.joystick2.getRawButton(10) ||
+                            IO.joystick2.getRawButton(11);
+                    
+                    if (unjam != newUnjam)
+                    {
+                        unjam = newUnjam;
+                        Elevator.instance.moveDown (unjam ? 70 : -70);
+                    }
+                }
 		
-		if (IO.joystick1.getTrigger ())
+		if (IO.joystick2.getTrigger ())
 			Shooter.instance.extend ();
 		else
 			Shooter.instance.retract ();
 		
-		Shooter.instance.setMotorOutput ((IO.joystick1.getZ () + 1) / 2);
-		
+                double z = (IO.joystick1.getZ () + 1) / 2;
+		Shooter.instance.setMotorOutput (z);
+                //Shooter.instance.setSpeed (z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND);
+                
+                if (false)
+                {
+                    // PID TESTING CODE
+                    
+                    IO.shooterPID.setPID (
+                        driverStation.getAnalogIn(1),
+                        driverStation.getAnalogIn(2),
+                        driverStation.getAnalogIn(3)
+                    );
+                }
+                
 		boolean anglerDown = IO.joystick1.getRawButton (4);
 		boolean anglerUp = IO.joystick1.getRawButton (5);
 		if (anglerDown != anglerUp)
@@ -95,21 +142,20 @@ public class OperatorController extends Controller
 			if (anglerDown)
 				Shooter.instance.lowerAngler ();
 		}
-		
+                if(IO.joystick1.getRawButton(3)){
+                    IO.innerPickupMotor.set(1);
+                }
+                else{
+                    IO.innerPickupMotor.set(0);
+                }
+		DriverStationLCD.setLine (0, "Angler up? " + anglerUp);
+                DriverStationLCD.setLine (1, "Shooter Pwr: " + z );
+                DriverStationLCD.setLine (2, "Shooter speed rpm" + Shooter.instance.getSpeed());
+                /*
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
-		DriverStationLCD.setLine (1, "ShtEncX: " + IO.shooterEncoder.getDistance ());
-		DriverStationLCD.setLine (2, "ShtEncV: " + IO.shooterEncoder.getRate ());
-		DriverStationLCD.setLine (3, "ElevEnc: " + IO.elevatorEncoder.getDistance ());
-		
-		/*
-		if (ticks++ % 10 == 0)
-		{
-			System.out.println (
-				"raw: " + IO.elevatorEncoder.get () +
-				"\t" + 
-				"elev: " + IO.elevatorEncoder.getDistance ()
-			);
-		}
-		*/
+		DriverStationLCD.setLine (1, "ShtEncV: " + IO.shooterEncoder.getRate ());
+		DriverStationLCD.setLine (2, "ElevEnc: " + IO.elevatorEncoder.getDistance ());
+		DriverStationLCD.setLine(3, "shooterPower: " + (IO.joystick1.getZ () + 1) / 2);
+                */
 	}
 }

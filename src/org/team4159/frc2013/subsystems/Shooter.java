@@ -14,9 +14,9 @@ public final class Shooter implements Subsystem
 	public static final int RETRACTED = 1;
 	public static final int EXTENDED = 2;
 	
-	public static final double KP = 1.0;
-	public static final double KI = 0.1;
-	public static final double KD = 0.05;
+	public static final double KP = 0.025;
+	public static final double KI = 0.0;
+	public static final double KD = 0.0;
 	
 	/**
 	 * Time (in milliseconds) required to fully retract.
@@ -29,36 +29,47 @@ public final class Shooter implements Subsystem
 	public static final int EXTENSION_DURATION = 800;
 	
 	/**
-	 * The tolerance (in RPM) smaller than which the shooter can be considered
+	 * The tolerance (in RPS) smaller than which the shooter can be considered
 	 * to be at the proper speed.
 	 */
 	public static final double SETPOINT_TOLERANCE = 300;
+        
+        /**
+         * Estimated maximum rotational speed of the unloaded shooter wheel.
+         */
+        public static final double MAXIMUM_REVOLUTIONS_PER_SECOND = 90.0;
 	
 	public static final Shooter instance = new Shooter ();
 	
-	private int state = EXTENDED;
-	private long stateChangeEnd;
+	private int pistonState = EXTENDED;
+	private long pistonStateChangeEnd;
+        private double shooterSpeed = Double.NaN;
 	
 	private Shooter ()
 	{
 		// configure PID
 		IO.shooterPID.setAbsoluteTolerance (SETPOINT_TOLERANCE);
-		IO.shooterPID.reset ();
+                IO.shooterPID.setOutputRange (-0.5, 1.0);
 	}
 
 	/**
-	 * Sets the speed of the shooter in RPM.
-	 * @param x speed of shooter in RPM
+	 * Sets the speed of the shooter in RPS.
+	 * @param x speed of shooter in RPS
 	 */
 	public void setSpeed (double x)
 	{
-		IO.shooterPID.setSetpoint (x);
-		IO.shooterPID.enable ();
+            if (shooterSpeed != x)
+            {
+                IO.shooterPID.setSetpoint (shooterSpeed = x);
+                IO.shooterPID.reset ();
+            }
+            
+            IO.shooterPID.enable ();
 	}
 	
 	/**
-	 * Gets the speed of the shooter in RPM.
-	 * @return speed of shooter in RPM
+	 * Gets the speed of the shooter in RPS.
+	 * @return speed of shooter in RPS
 	 */
 	public double getSpeed ()
 	{
@@ -69,7 +80,7 @@ public final class Shooter implements Subsystem
 	 * Checks whether the shooter is at the previously set speed.
 	 * @return true if the shooter is at the previously set speed.
 	 */
-	public boolean shooterReady ()
+	public boolean shooterIsReady ()
 	{
 		return IO.shooterPID.onTarget ();
 	}
@@ -79,7 +90,7 @@ public final class Shooter implements Subsystem
 	 */
 	public void waitForShooter ()
 	{
-		while (!shooterReady ())
+		while (!shooterIsReady ())
 			Controller.sleep (1);
 	}
 	
@@ -89,7 +100,7 @@ public final class Shooter implements Subsystem
 	public void extend ()
 	{
 		IO.shooterPiston.set (EXTENDED_SOLENOID_VALUE);
-		if (state == RETRACTED)
+		if (pistonState == RETRACTED)
 			_toggle ();
 	}
 	
@@ -99,7 +110,7 @@ public final class Shooter implements Subsystem
 	public void retract ()
 	{
 		IO.shooterPiston.set (RETRACTED_SOLENOID_VALUE);
-		if (state == EXTENDED)
+		if (pistonState == EXTENDED)
 			_toggle ();
 	}
 	
@@ -109,7 +120,7 @@ public final class Shooter implements Subsystem
 	 */
 	public boolean pistonIsReady ()
 	{
-		return System.currentTimeMillis () >= stateChangeEnd;
+		return System.currentTimeMillis () >= pistonStateChangeEnd;
 	}
 	
 	/**
@@ -117,7 +128,7 @@ public final class Shooter implements Subsystem
 	 */
 	public void waitForPiston ()
 	{
-		long rem = stateChangeEnd - System.currentTimeMillis ();
+		long rem = pistonStateChangeEnd - System.currentTimeMillis ();
 		if (rem > 0)
 			Controller.sleep (rem);
 	}
@@ -127,29 +138,29 @@ public final class Shooter implements Subsystem
 		long src_duration;
 		long tgt_duration;
 		
-		if (state == RETRACTED)
+		if (pistonState == RETRACTED)
 		{
-			state = EXTENDED;
+			pistonState = EXTENDED;
 			src_duration = RETRACTION_DURATION;
 			tgt_duration = EXTENSION_DURATION;
 		}
 		else
 		{
-			state = RETRACTED;
+			pistonState = RETRACTED;
 			src_duration = EXTENSION_DURATION;
 			tgt_duration = RETRACTION_DURATION;
 		}
 		
 		long now = System.currentTimeMillis ();
 		
-		if (now >= stateChangeEnd)
+		if (now >= pistonStateChangeEnd)
 		{
-			stateChangeEnd = now + tgt_duration;
+			pistonStateChangeEnd = now + tgt_duration;
 		}
 		else
 		{
-			long stateChangeStart = stateChangeEnd - src_duration;
-			stateChangeEnd = now + tgt_duration * (now - stateChangeStart) / src_duration;
+			long stateChangeStart = pistonStateChangeEnd - src_duration;
+			pistonStateChangeEnd = now + tgt_duration * (now - stateChangeStart) / src_duration;
 		}
 	}
 

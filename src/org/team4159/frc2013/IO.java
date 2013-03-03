@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.ADXL345_I2C.DataFormat_Range;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder.PIDSourceParameter;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.camera.AxisCamera;
 import org.team4159.frc2013.subsystems.Drive;
 import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.frc2013.subsystems.Shooter;
@@ -36,6 +38,8 @@ public class IO
 	static {
 		System.out.println ("Initializing IO ...");
 	}
+        
+        public final AxisCamera camera = AxisCamera.getInstance ("10.41.59.11");
 	
 	/****************************************
 	 * JOYSTICKS                            *
@@ -73,7 +77,9 @@ public class IO
 	
 	public static final Encoder shooterEncoder = new Encoder (11, 12);
 	static {
-		shooterEncoder.setDistancePerPulse (1.0);
+                double pulsesPerRevolution = 180;
+                double revolutionsPerPulse = 1 / pulsesPerRevolution;
+		shooterEncoder.setDistancePerPulse (revolutionsPerPulse);
 		shooterEncoder.setPIDSourceParameter (PIDSourceParameter.kRate);
 		shooterEncoder.start ();
 	}
@@ -127,7 +133,12 @@ public class IO
 	static {
 		shooterAngler.set (Value.kForward);
 	}
-	
+        
+	public static final Solenoid cameraLED = new Solenoid(8);
+        static {
+            cameraLED.set (true);
+        }
+        
 	// private constructor to prevent instantiation
 	private IO () {}
 	
