@@ -14,10 +14,6 @@ public class DisabledController extends Controller
 	
 	public void tick ()
 	{
-            /*if (true)
-            return;*/
-            
-            
 		Elevator.instance.setMotorOutput (0);
 		
 		System.out.println (
