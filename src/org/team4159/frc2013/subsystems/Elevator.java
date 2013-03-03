@@ -18,7 +18,7 @@ public final class Elevator implements Subsystem
 	/**
 	 * Elevator height.
 	 */
-	public static final double ELEVATOR_HEIGHT = 1300;
+	public static final double ELEVATOR_HEIGHT = 1286;
 	
 	/**
 	 * The output level at which the motor should be set
@@ -38,7 +38,7 @@ public final class Elevator implements Subsystem
 	 * at the input. The first element should represent the
 	 * bottom-most tray.
 	 */
-	public static final double[] TRAY_INPUT_POSITIONS = { 1137, 1210, 1281 };
+	public static final double[] TRAY_INPUT_POSITIONS = { 1130.25, 1201.75, 1286 };
 	
 	/**
 	 * Number of trays.
