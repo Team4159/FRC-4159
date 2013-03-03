@@ -49,24 +49,24 @@ public final class Elevator implements Subsystem
 	 * The tolerance smaller than which the elevator can be considered
 	 * to be at the proper position.
 	 */
-	public static final double SETPOINT_TOLERANCE = 2.0;
+	public static final double SETPOINT_TOLERANCE = 3.0;
 	
 	/**
 	 * Lower motor output of deadzone.
 	 */
-	public static final double DEADZONE_LOWER = -0.42;
+	public static final double DEADZONE_LOWER = -0.38;
 	
 	/**
 	 * Upper motor output of deadzone.
 	 */
-	public static final double DEADZONE_UPPER = 0.22;
+	public static final double DEADZONE_UPPER = 0.18;
 	
-	public static final double INTEGRAL_COEFFICIENT = 0.0218;
+	public static final double INTEGRAL_COEFFICIENT = 0.0204;
 	public static final double SLOWDOWN_COEFFICIENT = 0.70;
-	public static final double SLOWDOWN_DISTANCE_UP = 200;
-	public static final double SLOWDOWN_DISTANCE_DOWN = 200;
-	public static final double MAXIMUM_OUTPUT_UP = 1.0;
-	public static final double MAXIMUM_OUTPUT_DOWN = 0.8;
+	public static final double SLOWDOWN_DISTANCE_UP = 500;
+	public static final double SLOWDOWN_DISTANCE_DOWN = 500;
+	public static final double MAXIMUM_OUTPUT_UP = 0.9;
+	public static final double MAXIMUM_OUTPUT_DOWN = 0.7;
 	
 	/**
 	 * Singleton instance of this class.
@@ -127,10 +127,7 @@ public final class Elevator implements Subsystem
 	 */
 	public boolean isAtTop ()
 	{
-		if (calibrated)
-			return getDistanceFromTop () <= 0;
-		else
-			return IO.elevatorTop.get () == false;
+            return IO.elevatorTop.get () == false;
 	}
 	
 	/**
@@ -140,9 +137,9 @@ public final class Elevator implements Subsystem
 	 */
 	public boolean isAtBottom ()
 	{
-		if (calibrated)
-			return getDistanceFromBottom () <= 0;
-		else
+            if (calibrated)
+                    return getDistanceFromBottom () <= 0;
+            else
 			throw new IllegalStateException ("not calibrated");
 	}
 	
@@ -190,6 +187,18 @@ public final class Elevator implements Subsystem
 	{
 		setDistanceFromTop (ELEVATOR_HEIGHT - x);
 	}
+        
+        public void moveDown (double x)
+        {
+            if (this.setpointEnabled)
+                setpointFromTop += x;
+        }
+        
+        public void moveUp (double x)
+        {
+            if (this.setpointEnabled)
+                setpointFromTop -= x;
+        }
 	
 	/**
 	 * Checks whether the elevator is at the previously set position.
