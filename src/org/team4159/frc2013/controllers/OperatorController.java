@@ -60,7 +60,10 @@ class ShooterTest
 
 public class OperatorController extends Controller 
 {
-    private boolean unjam = false;
+    private boolean smallUnjamDown = false;
+    private boolean bigUnjamDown = false;
+    private boolean smallUnjamUp = false;
+    
     private LowPassFilter shooterLPF = new LowPassFilter (5);
     
 	public OperatorController ()
@@ -103,16 +106,32 @@ public class OperatorController extends Controller
 			Elevator.instance.moveTrayToOutput (2);
                 
                 {
-                    boolean newUnjam =
-                            IO.joystick2.getRawButton(6) ||
-                            IO.joystick2.getRawButton(7) ||
-                            IO.joystick2.getRawButton(10) ||
-                            IO.joystick2.getRawButton(11);
+                    boolean newSmallUnjamDown = IO.joystick2.getRawButton(6);
                     
-                    if (unjam != newUnjam)
+                    if (smallUnjamDown != newSmallUnjamDown)
                     {
-                        unjam = newUnjam;
-                        Elevator.instance.moveDown (unjam ? 70 : -70);
+                        smallUnjamDown = newSmallUnjamDown;
+                        Elevator.instance.moveDown (smallUnjamDown ? 70 : -70);
+                    }
+                }
+                
+                {
+                    boolean newBigUnjamDown = IO.joystick2.getRawButton(7);
+                    
+                    if (bigUnjamDown != newBigUnjamDown)
+                    {
+                        bigUnjamDown = newBigUnjamDown;
+                        Elevator.instance.moveDown (bigUnjamDown ? 700 : -700);
+                    }
+                }
+                
+                {
+                    boolean newSmallUnjamUp = IO.joystick2.getRawButton(8);
+                    
+                    if (smallUnjamUp != newSmallUnjamUp)
+                    {
+                        smallUnjamUp = newSmallUnjamUp;
+                        Elevator.instance.moveUp (smallUnjamUp ? 105 : -105);
                     }
                 }
 		
@@ -153,7 +172,7 @@ public class OperatorController extends Controller
                 }
                 
                 shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
-		DriverStationLCD.setLine (0, "Angler up? " + anglerUp);
+		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
                 DriverStationLCD.setLine (1, "Shooter Pwr: " + z );
                 DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
                 /*

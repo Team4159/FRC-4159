@@ -184,4 +184,9 @@ public final class Shooter implements Subsystem
 	{
 		IO.shooterAngler.set (Value.kReverse);
 	}
+        
+        public boolean anglerIsUp ()
+        {
+            return IO.shooterAngler.get () == Value.kForward;
+        }
 }
