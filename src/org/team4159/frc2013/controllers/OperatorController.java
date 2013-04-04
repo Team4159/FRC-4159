@@ -10,62 +10,9 @@ import org.team4159.support.DriverStationLCD;
 import org.team4159.support.ModeEnumerator;
 import org.team4159.support.filters.LowPassFilter;
 import com.sun.squawk.util.Arrays;
-import edu.wpi.first.wpilibj.DriverStation;
-
-class ElevatorTest
-{
-	private double[] samples = new double[8];
-	private double[] samplessorted = new double[samples.length];
-	private int samplei = 0;
-	
-	private double maxRate = 0;
-	
-	public void tick ()
-	{
-		samples[samplei] = IO.elevatorEncoder.getRate ();
-		samplei = (samplei + 1) % samples.length;
-		
-		System.arraycopy (samples, 0, samplessorted, 0, samples.length);
-		Arrays.sort (samplessorted);
-		
-		double medianRate = samplessorted[samples.length / 2];
-		maxRate = IO.joystick1.getRawButton (2) ?
-			0 : Math.max (maxRate, Math.abs (medianRate));
-		
-		//double elevatorOutput = IO.joystick1.getZ ();
-		//IO.elevatorMotor.set (IO.joystick1.getTrigger () ? elevatorOutput : 0);
-		
-		//DriverStationLCD.setLine (0, "Motor: " + elevatorOutput);
-		DriverStationLCD.setLine (1, "Encoder: " + maxRate);
-	}
-}
-
-/*
-class ShooterTest
-{
-    private double[] samplesraw = new double[21];
-    private double[] samplessorted = new double[samplesraw.length];
-    private int samplesindex = 0;
-    
-    public void tick ()
-    {
-        samplesraw[samplesindex++] = IO.shooterEncoder.getRate ();
-        samplesindex = (samplesindex + 1) % samplesraw.length;
-        
-        System.arraycopy (samplesraw, 0, samplessorted, 0, samplesraw.length);
-        Arrays.sort (samplessorted);
-        
-        DriverStationLCD.setLine (1, "ShtMed: " + samplessorted[samplesraw.length / 2]);
-    }
-}
-*/
 
 public class OperatorController extends Controller 
 {
-    private boolean smallUnjamDown = false;
-    private boolean bigUnjamDown = false;
-    private boolean smallUnjamUp = false;
-    
     private LowPassFilter shooterLPF = new LowPassFilter (5);
     
 	public OperatorController ()
@@ -81,63 +28,6 @@ public class OperatorController extends Controller
 		boolean shiftUp = IO.joystick2.getRawButton (3) || IO.joystick3.getRawButton(3);
 		if (shiftUp ^ shiftDown)
 			Drive.instance.setGearboxPosition (shiftUp);
-		
-		/*
-		if (IO.joystick1.getRawButton (6))
-			Elevator.instance.moveTrayToInput (0);
-		if (IO.joystick1.getRawButton (7))
-			Elevator.instance.moveTrayToInput (1);
-		if (IO.joystick1.getRawButton (8))
-			Elevator.instance.moveTrayToInput (2);
-		*/
-		
-		/*
-		boolean elevatorUp = IO.joystick1.getRawButton (6);
-		boolean elevatorDown = IO.joystick1.getRawButton (7);
-		if (elevatorUp ^ elevatorDown)
-			Elevator.instance.setMotorOutput (elevatorDown ? 0.5 : -0.5);
-		else
-			Elevator.instance.setMotorOutput (0);
-		*/
-                //elevator adjusting code
-		/*
-		if (IO.joystick1.getRawButton (9))
-			Elevator.instance.moveTrayToOutput (0);
-		if (IO.joystick1.getRawButton (10))
-			Elevator.instance.moveTrayToOutput (1);
-		if (IO.joystick1.getRawButton (11))
-			Elevator.instance.moveTrayToOutput (2);
-                
-                {
-                    boolean newSmallUnjamDown = IO.joystick2.getRawButton(6);
-                    
-                    if (smallUnjamDown != newSmallUnjamDown)
-                    {
-                        smallUnjamDown = newSmallUnjamDown;
-                        Elevator.instance.moveDown (smallUnjamDown ? 70 : -70);
-                    }
-                }
-                
-                {
-                    boolean newBigUnjamDown = IO.joystick2.getRawButton(7);
-                    
-                    if (bigUnjamDown != newBigUnjamDown)
-                    {
-                        bigUnjamDown = newBigUnjamDown;
-                        Elevator.instance.moveDown (bigUnjamDown ? 700 : -700);
-                    }
-                }
-                
-                {
-                    boolean newSmallUnjamUp = IO.joystick2.getRawButton(8);
-                    
-                    if (smallUnjamUp != newSmallUnjamUp)
-                    {
-                        smallUnjamUp = newSmallUnjamUp;
-                        Elevator.instance.moveUp (smallUnjamUp ? 105 : -105);
-                    }
-                }
-                * */
 		
 		if (IO.joystick1.getTrigger ())
 			Shooter.instance.extend ();
