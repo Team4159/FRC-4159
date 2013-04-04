@@ -47,6 +47,7 @@ public class IO
 	 ****************************************/
 	public static final Joystick joystick1 = new Joystick (1);
 	public static final Joystick joystick2 = new Joystick (2);
+        public static final Joystick joystick3 = new Joystick (3);
 	
 	/****************************************
 	 * SENSORS                              *

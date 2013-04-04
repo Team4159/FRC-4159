@@ -32,10 +32,10 @@ class ElevatorTest
 		maxRate = IO.joystick1.getRawButton (2) ?
 			0 : Math.max (maxRate, Math.abs (medianRate));
 		
-		double elevatorOutput = IO.joystick1.getZ ();
+		//double elevatorOutput = IO.joystick1.getZ ();
 		//IO.elevatorMotor.set (IO.joystick1.getTrigger () ? elevatorOutput : 0);
 		
-		DriverStationLCD.setLine (0, "Motor: " + elevatorOutput);
+		//DriverStationLCD.setLine (0, "Motor: " + elevatorOutput);
 		DriverStationLCD.setLine (1, "Encoder: " + maxRate);
 	}
 }
@@ -73,10 +73,10 @@ public class OperatorController extends Controller
 	
 	public void tick ()
 	{
-		Drive.instance.arcadeDrive (IO.joystick2);
+		Drive.instance.tankDrive(IO.joystick2,IO.joystick3);
 		
-		boolean shiftDown = IO.joystick2.getRawButton (2);
-		boolean shiftUp = IO.joystick2.getRawButton (3);
+		boolean shiftDown = IO.joystick2.getRawButton (2) || IO.joystick3.getRawButton(2);
+		boolean shiftUp = IO.joystick2.getRawButton (3) || IO.joystick3.getRawButton(3);
 		if (shiftUp ^ shiftDown)
 			Drive.instance.setGearboxPosition (shiftUp);
 		
@@ -97,7 +97,8 @@ public class OperatorController extends Controller
 		else
 			Elevator.instance.setMotorOutput (0);
 		*/
-		
+                //elevator adjusting code
+		/*
 		if (IO.joystick1.getRawButton (9))
 			Elevator.instance.moveTrayToOutput (0);
 		if (IO.joystick1.getRawButton (10))
@@ -134,8 +135,9 @@ public class OperatorController extends Controller
                         Elevator.instance.moveUp (smallUnjamUp ? 105 : -105);
                     }
                 }
+                * */
 		
-		if (IO.joystick2.getTrigger ())
+		if (IO.joystick1.getTrigger ())
 			Shooter.instance.extend ();
 		else
 			Shooter.instance.retract ();

@@ -19,8 +19,14 @@ public class AutonomousController extends Controller
 		// make sure that only sleep() blocks
             
                 // set shooter speed
-		Shooter.instance.setMotorOutput(1.0);//shooting for center
+		/*OLD SHOOTER VALUES!!!!
+                Shooter.instance.setMotorOutput(1.0);//shooting for center
                 //Shooter.instance.setMotorOutput(.875)// shooting from back corner
+                */
+                //SVR VALUES!!! USE THESE WITH THE NEW SHOOTER!!
+                Shooter.instance.setMotorOutput(1.0);
+                
+                
 		DriverStationLCD.setLine (2, "Shooter spinned up");
 		// retract shooter so elevator can move
                 Shooter.instance.raiseAngler();
