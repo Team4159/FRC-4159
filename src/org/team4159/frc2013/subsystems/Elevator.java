@@ -94,14 +94,14 @@ public final class Elevator implements Subsystem
 	public void calibrate ()
 	{
 		// set elevator motor to calibration output
-		IO.elevatorMotor.set (-CALIBRATION_OUTPUT);
+		//IO.elevatorMotor.set (-CALIBRATION_OUTPUT);
 		
 		// wait for switch to be touched
 		while (!isAtTop ())
 			Controller.sleep (1);
 		
 		// stop elevator motor
-		IO.elevatorMotor.set (0);
+		//IO.elevatorMotor.set (0);
 		
 		// switch touched, reset and configure sensor here
 		IO.elevatorEncoder.setMaxPeriod (0.25);
@@ -340,7 +340,7 @@ public final class Elevator implements Subsystem
 	public void setMotorOutput (double x)
 	{
 		synchronized (this) { setpointEnabled = false; }
-		IO.elevatorMotor.set (x);
+		//IO.elevatorMotor.set (x);
 	}
 	
 	public static final boolean USE_TASK = true;
@@ -405,7 +405,7 @@ public final class Elevator implements Subsystem
 			{
 				if (setpointEnabled)
 				{
-					IO.elevatorMotor.set (x);
+					//IO.elevatorMotor.set (x);
 					System.out.println ("motor to " + x);
 				}
 			}

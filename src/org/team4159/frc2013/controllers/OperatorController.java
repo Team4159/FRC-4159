@@ -33,7 +33,7 @@ class ElevatorTest
 			0 : Math.max (maxRate, Math.abs (medianRate));
 		
 		double elevatorOutput = IO.joystick1.getZ ();
-		IO.elevatorMotor.set (IO.joystick1.getTrigger () ? elevatorOutput : 0);
+		//IO.elevatorMotor.set (IO.joystick1.getTrigger () ? elevatorOutput : 0);
 		
 		DriverStationLCD.setLine (0, "Motor: " + elevatorOutput);
 		DriverStationLCD.setLine (1, "Encoder: " + maxRate);

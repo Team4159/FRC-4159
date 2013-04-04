@@ -28,15 +28,15 @@ public class AutonomousController extends Controller
 		Controller.sleep(100);
                 
 		// calibrate elevator
-		Elevator.instance.calibrate ();
+		//Elevator.instance.calibrate ();
                 Controller.sleep(500);
 		DriverStationLCD.setLine (1, "Elevator Alligning");
 		// fire the frisbees
 		for (int i = Elevator.NUMBER_OF_TRAYS - 1; i >= 0; i--)
 		{
-			Elevator.instance.moveTrayToOutput (i);
+			//Elevator.instance.moveTrayToOutput (i);
 			
-			Elevator.instance.waitUntilAtSetpoint ();
+			//Elevator.instance.waitUntilAtSetpoint ();
 			Controller.sleep(1500);//shooting from center, longer wait for spin up
                         //Controller.sleep(1000); //shooting from corners, shorter wait for spin up
                         DriverStationLCD.setLine (1, "Moving Elevator lvl: " + i);

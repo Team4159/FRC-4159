@@ -97,8 +97,8 @@ public class IO
 	public static final Talon driveMotorRight = new Talon (2);
 	public static final Talon shooterMotor = new Talon (3);
 	public static final Victor elevatorRawMotor = new Victor (4);
-	public static final DeadzoneCompensatedMotor elevatorMotor =
-		new DeadzoneCompensatedMotor (elevatorRawMotor, Elevator.DEADZONE_LOWER, Elevator.DEADZONE_UPPER);
+	//public static final DeadzoneCompensatedMotor elevatorMotor =
+		//new DeadzoneCompensatedMotor (elevatorRawMotor, Elevator.DEADZONE_LOWER, Elevator.DEADZONE_UPPER);
 	public static final Victor innerPickupMotor = new Victor (5);
 	public static final Victor outerPickupMotor = new Victor (6);
 	
