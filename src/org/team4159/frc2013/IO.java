@@ -56,8 +56,6 @@ public class IO
 	
 	// 1 is in use by compressor
 	public static final DigitalInput elevatorTop = new DigitalInput (2);
-	public static final DigitalInput pickupFirst = new DigitalInput (3);
-	public static final DigitalInput pickupSecond = new DigitalInput (4);
 	
 	public static final Encoder driveEncoderLeft = new Encoder (5, 6);
 	public static final Encoder driveEncoderRight = new Encoder (7, 8);

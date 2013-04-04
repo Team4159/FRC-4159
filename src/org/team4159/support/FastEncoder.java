@@ -29,14 +29,13 @@ public class FastEncoder extends SensorBase implements PIDSource
     
     private class Task extends TimerTask
     {
+        private final DigitalModule dm = DigitalModule.getInstance (getDefaultDigitalModule ());
         private final byte[] result = new byte[2];
         
         public void run ()
         {
             // get the sample
-            //DigitalOutput a = new DigitalOutput ();
-            //boolean failure = i2c.read (0x00, 2, result);
-            //System.out.println ("failure: " + failure);
+            transact ();
             
             // calculate sample and account for overflow
             long sample = (previous & 0xFFFFFFFFFFFF0000L) | (result[1] << 8) | result[0];
@@ -50,6 +49,39 @@ public class FastEncoder extends SensorBase implements PIDSource
                 samples[index] = sample;
                 index = (index + 1) % samples.length;
             }
+        }
+        
+        public void transact ()
+        {
+            highSDA ();
+            highSCL ();
+            
+            lowSDA ();
+            lowSCL ();
+            
+            sendByte ((0x0e << 0) | 0x00);
+            System.out.println ("ack1: " + readACK ());
+            
+            sendByte (0x00);
+            readACK ();
+            
+            highSDA ();
+            highSCL ();
+            
+            lowSDA ();
+            lowSCL ();
+            
+            sendByte ((0x0e << 1) | 0x01);
+            System.out.println ("ack2: " + readACK ());
+            
+            readByte ();
+            writeACK ();
+            
+            readByte ();
+            writeNACK ();
+            
+            highSCL ();
+            highSDA ();
         }
     }
     

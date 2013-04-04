@@ -15,6 +15,7 @@ public class OperatorController extends Controller
 {
     private boolean finePressed = false;
     private boolean fineShooter = false;
+    private double fineShooterBase = 0.0;
     private double fineShooterLevel = 0.0;
     
     private LowPassFilter shooterLPF = new LowPassFilter (5);
@@ -41,18 +42,19 @@ public class OperatorController extends Controller
                 double shooterOutput;
                 {
                     double z = (IO.joystick1.getZ () + 1) / 2;
-                    if (Math.abs (z - fineShooterLevel) > 0.1)
+                    if (Math.abs (z - fineShooterBase) > 0.1)
                         fineShooter = false;
 
                     boolean fasterPressed = IO.joystick1.getRawButton (3);
-                    boolean slowerPressed = IO.joystick1.getRawButton (4);
+                    boolean slowerPressed = IO.joystick1.getRawButton (2);
                     
                     if (fasterPressed || slowerPressed)
                     {
                         if (!fineShooter)
                         {
                             fineShooter = true;
-                            fineShooterLevel = z;
+                            fineShooterBase = z;
+                            fineShooterLevel = Math.floor (z * 100) / 100;
                         }
                         
                         if (!finePressed)
@@ -99,7 +101,7 @@ public class OperatorController extends Controller
                 
                 //shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
-                DriverStationLCD.setLine (1, "Shooter Pwr: " + shooterOutput );
+                DriverStationLCD.setLine (1, "Shooter Pwr: " + (int)(shooterOutput * 100) + "%");
                 DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
                 /*
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());

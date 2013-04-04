@@ -24,34 +24,32 @@ public class AutonomousController extends Controller
                 //Shooter.instance.setMotorOutput(.875)// shooting from back corner
                 */
                 //SVR VALUES!!! USE THESE WITH THE NEW SHOOTER!!
-                Shooter.instance.setMotorOutput(1.0);
+                Shooter.instance.setMotorOutput(.80);
                 
                 
 		DriverStationLCD.setLine (2, "Shooter spinned up");
 		// retract shooter so elevator can move
                 Shooter.instance.raiseAngler();
 		Shooter.instance.retract();
-		Controller.sleep(100);
-                
 		// calibrate elevator
 		//Elevator.instance.calibrate ();
-                Controller.sleep(500);
+                Controller.sleep(1000);
 		DriverStationLCD.setLine (1, "Elevator Alligning");
 		// fire the frisbees
-		for (int i = Elevator.NUMBER_OF_TRAYS - 1; i >= 0; i--)
+		for (int i = 0; i < 3; i++)
 		{
 			//Elevator.instance.moveTrayToOutput (i);
 			
 			//Elevator.instance.waitUntilAtSetpoint ();
-			Controller.sleep(1500);//shooting from center, longer wait for spin up
+                        Shooter.instance.setMotorOutput(.6+i*.1);
+			Controller.sleep(3500);//shooting from center, longer wait for spin up
                         //Controller.sleep(1000); //shooting from corners, shorter wait for spin up
                         DriverStationLCD.setLine (1, "Moving Elevator lvl: " + i);
                         
 			Shooter.instance.extend ();
-                        Controller.sleep (700);
+                        Controller.sleep (600);
                         DriverStationLCD.setLine (1, "shooting lvl: " + i);
 			Shooter.instance.retract ();
-                        Controller.sleep (700);
 		}
                 
         }
