@@ -34,9 +34,9 @@ public class FastEncoder extends SensorBase implements PIDSource
         public void run ()
         {
             // get the sample
-            DigitalOutput a = new DigitalOutput ();
-            boolean failure = i2c.read (0x00, 2, result);
-            System.out.println ("failure: " + failure);
+            //DigitalOutput a = new DigitalOutput ();
+            //boolean failure = i2c.read (0x00, 2, result);
+            //System.out.println ("failure: " + failure);
             
             // calculate sample and account for overflow
             long sample = (previous & 0xFFFFFFFFFFFF0000L) | (result[1] << 8) | result[0];

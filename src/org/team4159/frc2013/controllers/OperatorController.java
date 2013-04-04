@@ -13,6 +13,10 @@ import com.sun.squawk.util.Arrays;
 
 public class OperatorController extends Controller 
 {
+    private boolean finePressed = false;
+    private boolean fineShooter = false;
+    private double fineShooterLevel = 0.0;
+    
     private LowPassFilter shooterLPF = new LowPassFilter (5);
     
 	public OperatorController ()
@@ -34,8 +38,36 @@ public class OperatorController extends Controller
 		else
 			Shooter.instance.retract ();
 		
-                double z = (IO.joystick1.getZ () + 1) / 2;
-		Shooter.instance.setMotorOutput (z);
+                double shooterOutput;
+                {
+                    double z = (IO.joystick1.getZ () + 1) / 2;
+                    if (Math.abs (z - fineShooterLevel) > 0.1)
+                        fineShooter = false;
+
+                    boolean fasterPressed = IO.joystick1.getRawButton (3);
+                    boolean slowerPressed = IO.joystick1.getRawButton (4);
+                    
+                    if (fasterPressed || slowerPressed)
+                    {
+                        if (!fineShooter)
+                        {
+                            fineShooter = true;
+                            fineShooterLevel = z;
+                        }
+                        
+                        if (!finePressed)
+                        {
+                            if (fasterPressed)
+                                fineShooterLevel += 0.01;
+                            else
+                                fineShooterLevel -= 0.01;
+                        }
+                    }
+                    
+                    finePressed = fasterPressed || slowerPressed;
+                    
+                    Shooter.instance.setMotorOutput (shooterOutput = fineShooter ? fineShooterLevel : z);
+                }
                 //Shooter.instance.setSpeed (z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND);
                 
                 if (false)
@@ -67,7 +99,7 @@ public class OperatorController extends Controller
                 
                 //shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
-                DriverStationLCD.setLine (1, "Shooter Pwr: " + z );
+                DriverStationLCD.setLine (1, "Shooter Pwr: " + shooterOutput );
                 DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
                 /*
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
