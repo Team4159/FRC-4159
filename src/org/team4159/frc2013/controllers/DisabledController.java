@@ -16,6 +16,7 @@ public class DisabledController extends Controller
 	{
 		Elevator.instance.setMotorOutput (0);
 		
+                /*
 		System.out.println (
 			"elev raw: " + IO.elevatorEncoder.get () +
 			"\t" + 
@@ -26,5 +27,8 @@ public class DisabledController extends Controller
 			"shooter dist: " + IO.shooterEncoder.getDistance () + "\t" + 
 			"shooter rate: " + IO.shooterEncoder.getRate ()
 		);
+                */
+                
+                //System.out.println ("pos = " + IO.shooterEncoder.getPosition() + " \t vel = " + IO.shooterEncoder.getVelocity());
 	}
 }

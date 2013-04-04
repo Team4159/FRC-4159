@@ -40,6 +40,7 @@ class ElevatorTest
 	}
 }
 
+/*
 class ShooterTest
 {
     private double[] samplesraw = new double[21];
@@ -57,6 +58,7 @@ class ShooterTest
         DriverStationLCD.setLine (1, "ShtMed: " + samplessorted[samplesraw.length / 2]);
     }
 }
+*/
 
 public class OperatorController extends Controller 
 {
@@ -173,7 +175,7 @@ public class OperatorController extends Controller
                     IO.innerPickupMotor.set(0);
                 }
                 
-                shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
+                //shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
                 DriverStationLCD.setLine (1, "Shooter Pwr: " + z );
                 DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
