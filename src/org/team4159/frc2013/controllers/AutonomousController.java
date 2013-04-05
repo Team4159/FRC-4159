@@ -47,12 +47,14 @@ public class AutonomousController extends Controller
 			//Elevator.instance.moveTrayToOutput (i);
 			
 			//Elevator.instance.waitUntilAtSetpoint ();
-			Controller.sleep(3500);//shooting from center, longer wait for spin up
+			Shooter.instance.waitForShooter();//shooting from center, longer wait for spin up
+                        Controller.sleep (500);
                         //Controller.sleep(1000); //shooting from corners, shorter wait for spin up
 			Shooter.instance.extend ();
-                        Controller.sleep (600);
+                        Shooter.instance.waitForPiston ();
                         DriverStationLCD.setLine (5, "shooting disc #: " + (i+1));
 			Shooter.instance.retract ();
+                        Shooter.instance.waitForPiston ();
 		}
                 Controller.sleep(1500);
                 Shooter.instance.setSpeed(0);
