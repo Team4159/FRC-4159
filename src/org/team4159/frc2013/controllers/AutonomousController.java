@@ -41,7 +41,7 @@ public class AutonomousController extends Controller
 			//Elevator.instance.moveTrayToOutput (i);
 			
 			//Elevator.instance.waitUntilAtSetpoint ();
-                        Shooter.instance.setMotorOutput(.6+i*.1);
+                        Shooter.instance.setMotorOutput(.875);
 			Controller.sleep(3500);//shooting from center, longer wait for spin up
                         //Controller.sleep(1000); //shooting from corners, shorter wait for spin up
                         DriverStationLCD.setLine (1, "Moving Elevator lvl: " + i);

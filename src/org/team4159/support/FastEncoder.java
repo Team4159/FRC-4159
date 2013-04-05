@@ -53,35 +53,6 @@ public class FastEncoder extends SensorBase implements PIDSource
         
         public void transact ()
         {
-            highSDA ();
-            highSCL ();
-            
-            lowSDA ();
-            lowSCL ();
-            
-            sendByte ((0x0e << 0) | 0x00);
-            System.out.println ("ack1: " + readACK ());
-            
-            sendByte (0x00);
-            readACK ();
-            
-            highSDA ();
-            highSCL ();
-            
-            lowSDA ();
-            lowSCL ();
-            
-            sendByte ((0x0e << 1) | 0x01);
-            System.out.println ("ack2: " + readACK ());
-            
-            readByte ();
-            writeACK ();
-            
-            readByte ();
-            writeNACK ();
-            
-            highSCL ();
-            highSDA ();
         }
     }
     
