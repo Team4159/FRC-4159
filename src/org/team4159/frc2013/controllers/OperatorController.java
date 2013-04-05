@@ -10,6 +10,7 @@ import org.team4159.support.DriverStationLCD;
 import org.team4159.support.ModeEnumerator;
 import org.team4159.support.filters.LowPassFilter;
 import com.sun.squawk.util.Arrays;
+import com.sun.squawk.util.MathUtils;
 
 public class OperatorController extends Controller 
 {
@@ -37,48 +38,44 @@ public class OperatorController extends Controller
 		else
 			Shooter.instance.retract ();
 		
-                double z = (IO.joystick1.getZ () + 1) / 2;
-                double shooterOutput;
-                
-                if (true)
                 {
-                    shooterOutput = z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND;
-                    Shooter.instance.setSpeed(shooterOutput);
-                }
-                else
-                {
-                    if (Math.abs (z - fineShooterBase) > 0.1)
+                    double z = (IO.joystick1.getZ () + 1) / 2;
+                    double coarse = z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND;
+                    
+                    if (Math.abs (coarse - fineShooterBase) > 5)
                         fineShooter = false;
 
                     boolean fasterPressed = IO.joystick1.getRawButton (3);
                     boolean slowerPressed = IO.joystick1.getRawButton (2);
-                    
+
                     if (fasterPressed || slowerPressed)
                     {
                         if (!fineShooter)
                         {
                             fineShooter = true;
-                            fineShooterBase = z;
-                            fineShooterLevel = Math.floor (z * 100) / 100;
+                            fineShooterBase = coarse;
+                            fineShooterLevel = coarse;
                         }
-                        
+
                         if (!finePressed)
                         {
                             if (fasterPressed)
-                                fineShooterLevel += 0.01;
+                                fineShooterLevel += 1;
                             else
-                                fineShooterLevel -= 0.01;
+                                fineShooterLevel -= 1;
                         }
+                        
+                        fineShooterLevel = MathUtils.round (fineShooterLevel);
                     }
-                    
+
                     finePressed = fasterPressed || slowerPressed;
                     
-                    Shooter.instance.setMotorOutput (shooterOutput = fineShooter ? fineShooterLevel : z);
+                    Shooter.instance.setSpeed (fineShooter ? fineShooterLevel : coarse);
                 }
+                
                 if (false)
                 {
                     // PID TESTING CODE
-                    
                     IO.shooterPID.setPID (
                         driverStation.getAnalogIn(1) / 10,
                         driverStation.getAnalogIn(2) / 10,
@@ -108,7 +105,5 @@ public class OperatorController extends Controller
                 DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
                 DriverStationLCD.setLine (3, "Shooter ASP:" + IO.shooterPID.onTarget());
                 DriverStationLCD.setLine (4, "Shooter PWR:" + IO.shooterMotor.get());
-                
-                
 	}
 }

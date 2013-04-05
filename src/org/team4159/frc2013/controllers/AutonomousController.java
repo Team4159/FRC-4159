@@ -25,8 +25,12 @@ public class AutonomousController extends Controller
                 //Shooter.instance.setMotorOutput(.875)// shooting from back corner
                 */
                 //SVR VALUES!!! USE THESE WITH THE NEW SHOOTER!!
-                Shooter.instance.setSpeed(driverStation.getAnalogIn(1)*100);
-                
+                /*double speed = driverStation.getAnalogIn(1)*100;
+                if(speed < 5){
+                    speed = 60;
+                }*/
+                Shooter.instance.setSpeed(60);
+                //Shooter.instance.setSpeed(driverStation.getAnalogIn(1) * 100);
                 
 		DriverStationLCD.setLine (2, "Shooter done");
 		// retract shooter so elevator can move
