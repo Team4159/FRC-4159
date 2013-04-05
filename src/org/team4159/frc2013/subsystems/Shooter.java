@@ -71,12 +71,10 @@ public final class Shooter implements Subsystem
 	 * Gets the speed of the shooter in RPS.
 	 * @return speed of shooter in RPS
 	 */
-        /*
 	public double getSpeed ()
 	{
 		return IO.shooterEncoder.getRate ();
 	}
-        */
 	
 	/**
 	 * Checks whether the shooter is at the previously set speed.

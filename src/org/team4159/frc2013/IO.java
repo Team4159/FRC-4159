@@ -28,7 +28,7 @@ import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.ADXL345_Extended;
 import org.team4159.support.CombinedMotor;
 import org.team4159.support.DeadzoneCompensatedMotor;
-import org.team4159.support.FastEncoder;
+import org.team4159.support.SlidingAverageEncoder;
 
 /**
  *
@@ -76,25 +76,21 @@ public class IO
 		elevatorEncoder.start ();
 	}
 	
-        /*
-	public static final Encoder shooterEncoder = new Encoder (11, 12);
+	public static final Encoder shooterEncoder = new SlidingAverageEncoder (11, 12, 5, 20);
 	static {
-                double pulsesPerRevolution = 180;
-                double revolutionsPerPulse = 1 / pulsesPerRevolution;
+		double pulsesPerRevolution = 180;
+		double revolutionsPerPulse = 1 / pulsesPerRevolution;
 		shooterEncoder.setDistancePerPulse (revolutionsPerPulse);
 		shooterEncoder.setPIDSourceParameter (PIDSourceParameter.kRate);
 		shooterEncoder.start ();
 	}
-        */
         
-        public static final FastEncoder shooterEncoder = new FastEncoder (4, 25);
-	
         /*
 	public static final Gyro gyroscope =
 		new Gyro (1);
 	public static final ADXL345_Extended accelerometer =
 		new ADXL345_Extended ();
-        *.
+        */
 	
 	/****************************************
 	 * MOTORS                               *

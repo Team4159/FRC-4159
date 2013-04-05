@@ -42,8 +42,6 @@ public class Entry extends RobotBase
 	{
 		System.out.println ("Entry.startCompetition() called.");
                 
-                //new ImageSampler ().start ();
-		
 		while (true)
 		{
 			int mode = ModeEnumerator.getMode();
