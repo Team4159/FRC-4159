@@ -37,9 +37,16 @@ public class OperatorController extends Controller
 		else
 			Shooter.instance.retract ();
 		
+                double z = (IO.joystick1.getZ () + 1) / 2;
                 double shooterOutput;
+                
+                if (true)
                 {
-                    double z = (IO.joystick1.getZ () + 1) / 2;
+                    shooterOutput = z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND;
+                    Shooter.instance.setSpeed(shooterOutput);
+                }
+                else
+                {
                     if (Math.abs (z - fineShooterBase) > 0.1)
                         fineShooter = false;
 
@@ -68,16 +75,14 @@ public class OperatorController extends Controller
                     
                     Shooter.instance.setMotorOutput (shooterOutput = fineShooter ? fineShooterLevel : z);
                 }
-                //Shooter.instance.setSpeed (z * Shooter.MAXIMUM_REVOLUTIONS_PER_SECOND);
-                
                 if (false)
                 {
                     // PID TESTING CODE
                     
                     IO.shooterPID.setPID (
-                        driverStation.getAnalogIn(1),
-                        driverStation.getAnalogIn(2),
-                        driverStation.getAnalogIn(3)
+                        driverStation.getAnalogIn(1) / 10,
+                        driverStation.getAnalogIn(2) / 10,
+                        driverStation.getAnalogIn(3) / 10
                     );
                 }
                 
@@ -99,13 +104,11 @@ public class OperatorController extends Controller
                 
                 //shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
-                DriverStationLCD.setLine (1, "Shooter Pwr: " + (int)(shooterOutput * 100) + "%");
+                DriverStationLCD.setLine (1, "Shooter TGT: " + IO.shooterPID.getSetpoint());
                 DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
-                /*
-		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
-		DriverStationLCD.setLine (1, "ShtEncV: " + IO.shooterEncoder.getRate ());
-		DriverStationLCD.setLine (2, "ElevEnc: " + IO.elevatorEncoder.getDistance ());
-		DriverStationLCD.setLine(3, "shooterPower: " + (IO.joystick1.getZ () + 1) / 2);
-                */
+                DriverStationLCD.setLine (3, "Shooter ASP:" + IO.shooterPID.onTarget());
+                DriverStationLCD.setLine (4, "Shooter PWR:" + IO.shooterMotor.get());
+                
+                
 	}
 }

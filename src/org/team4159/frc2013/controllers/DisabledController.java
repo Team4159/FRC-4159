@@ -15,6 +15,7 @@ public class DisabledController extends Controller
 	public void tick ()
 	{
 		Elevator.instance.setMotorOutput (0);
+                IO.shooterPID.reset ();
 		
                 /*
 		System.out.println (

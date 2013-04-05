@@ -1,5 +1,6 @@
 package org.team4159.frc2013.controllers;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team4159.frc2013.IO;
 import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.frc2013.subsystems.Shooter;
@@ -24,33 +25,38 @@ public class AutonomousController extends Controller
                 //Shooter.instance.setMotorOutput(.875)// shooting from back corner
                 */
                 //SVR VALUES!!! USE THESE WITH THE NEW SHOOTER!!
-                Shooter.instance.setMotorOutput(.80);
+                Shooter.instance.setSpeed(driverStation.getAnalogIn(1)*100);
                 
                 
-		DriverStationLCD.setLine (2, "Shooter spinned up");
+		DriverStationLCD.setLine (2, "Shooter done");
 		// retract shooter so elevator can move
                 Shooter.instance.raiseAngler();
 		Shooter.instance.retract();
 		// calibrate elevator
 		//Elevator.instance.calibrate ();
                 Controller.sleep(1000);
-		DriverStationLCD.setLine (1, "Elevator Alligning");
+		//DriverStationLCD.setLine (1, "Elevator Alligning");
 		// fire the frisbees
 		for (int i = 0; i < 3; i++)
 		{
+                    DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
+                DriverStationLCD.setLine (1, "Shooter TGT: " + IO.shooterPID.getSetpoint());
+                DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
+                DriverStationLCD.setLine (3, "Shooter ASP:" + IO.shooterPID.onTarget());
+                DriverStationLCD.setLine (4, "Shooter PWR:" + IO.shooterMotor.get());
 			//Elevator.instance.moveTrayToOutput (i);
 			
 			//Elevator.instance.waitUntilAtSetpoint ();
-                        Shooter.instance.setMotorOutput(.875);
 			Controller.sleep(3500);//shooting from center, longer wait for spin up
                         //Controller.sleep(1000); //shooting from corners, shorter wait for spin up
-                        DriverStationLCD.setLine (1, "Moving Elevator lvl: " + i);
-                        
 			Shooter.instance.extend ();
                         Controller.sleep (600);
-                        DriverStationLCD.setLine (1, "shooting lvl: " + i);
+                        DriverStationLCD.setLine (5, "shooting disc #: " + (i+1));
 			Shooter.instance.retract ();
 		}
+                Controller.sleep(1500);
+                Shooter.instance.setSpeed(0);
+                Shooter.instance.lowerAngler();
                 
         }
 	

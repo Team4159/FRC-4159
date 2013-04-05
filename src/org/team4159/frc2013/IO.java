@@ -76,7 +76,7 @@ public class IO
 		elevatorEncoder.start ();
 	}
 	
-	public static final Encoder shooterEncoder = new SlidingAverageEncoder (11, 12, 5, 20);
+	public static final Encoder shooterEncoder = new SlidingAverageEncoder (11, 12, 10, 20);
 	static {
 		double pulsesPerRevolution = 180;
 		double revolutionsPerPulse = 1 / pulsesPerRevolution;

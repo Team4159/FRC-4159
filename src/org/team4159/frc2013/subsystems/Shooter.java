@@ -14,9 +14,9 @@ public final class Shooter implements Subsystem
 	public static final int RETRACTED = 1;
 	public static final int EXTENDED = 2;
 	
-	public static final double KP = 0.025;
-	public static final double KI = 0.0;
-	public static final double KD = 0.0;
+	public static final double KP = 0.180;
+	public static final double KI = 0.060;
+	public static final double KD = 0.600;
 	
 	/**
 	 * Time (in milliseconds) required to fully retract.
@@ -32,7 +32,7 @@ public final class Shooter implements Subsystem
 	 * The tolerance (in RPS) smaller than which the shooter can be considered
 	 * to be at the proper speed.
 	 */
-	public static final double SETPOINT_TOLERANCE = 300;
+	public static final double SETPOINT_TOLERANCE = 1;
         
         /**
          * Estimated maximum rotational speed of the unloaded shooter wheel.
@@ -49,7 +49,7 @@ public final class Shooter implements Subsystem
 	{
 		// configure PID
 		IO.shooterPID.setAbsoluteTolerance (SETPOINT_TOLERANCE);
-                IO.shooterPID.setOutputRange (-0.5, 1.0);
+                IO.shooterPID.setOutputRange (0.0, 1.0);
 	}
 
 	/**
