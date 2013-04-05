@@ -18,8 +18,6 @@ public class OperatorController extends Controller
     private double fineShooterBase = 0.0;
     private double fineShooterLevel = 0.0;
     
-    private LowPassFilter shooterLPF = new LowPassFilter (5);
-    
 	public OperatorController ()
 	{
 		super (ModeEnumerator.OPERATOR);
@@ -102,7 +100,7 @@ public class OperatorController extends Controller
                 //shooterLPF.update (Shooter.instance.getSpeed (), Entry.TICK_INTERVAL_MS / 1000.);
 		DriverStationLCD.setLine (0, "Angler up? " + Shooter.instance.anglerIsUp ());
                 DriverStationLCD.setLine (1, "Shooter Pwr: " + (int)(shooterOutput * 100) + "%");
-                DriverStationLCD.setLine (2, "Shooter RPS:" + shooterLPF.get());
+                DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
                 /*
 		DriverStationLCD.setLine (0, "ShtOut: " + IO.shooterMotor.get ());
 		DriverStationLCD.setLine (1, "ShtEncV: " + IO.shooterEncoder.getRate ());
