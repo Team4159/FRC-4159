@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import com.sun.cldc.jna.Function;
 import com.sun.cldc.jna.Native;
+import com.sun.cldc.jna.NativeLibrary;
 import com.sun.cldc.jna.Pointer;
 import com.sun.squawk.microedition.io.FileConnection;
 
@@ -134,7 +135,8 @@ public class DataCollector
 			try {
 				fc.create ();
 			} catch (IOException e) {
-				Function mkdir = Native.getLibraryLoading ().getFunction ("mkdir");
+				Function mkdir = NativeLibrary.getDefaultInstance ().getFunction ("mkdir");
+				
 				Pointer ptr = Pointer.createStringBuffer (dirPrefix);
 				int res = mkdir.call2 (ptr, 0666);
 				ptr.free ();
