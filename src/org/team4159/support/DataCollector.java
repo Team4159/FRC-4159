@@ -4,11 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.microedition.io.Connector;
+import com.sun.cldc.jna.Function;
+import com.sun.cldc.jna.Native;
+import com.sun.cldc.jna.Pointer;
 import com.sun.squawk.microedition.io.FileConnection;
 
 public class DataCollector
@@ -129,7 +131,20 @@ public class DataCollector
 		
 		// write back number
 		{
-			fc.create ();
+			try {
+				fc.create ();
+			} catch (IOException e) {
+				Function mkdir = Native.getLibraryLoading ().getFunction ("mkdir");
+				Pointer ptr = Pointer.createStringBuffer (dirPrefix);
+				int res = mkdir.call2 (ptr, 0666);
+				ptr.free ();
+				
+				if (res == 0)
+					fc.create ();
+				else
+					throw e;
+			}
+			
 			DataOutputStream dos = fc.openDataOutputStream ();
 			dos.writeInt (next + 1);
 			dos.close ();
