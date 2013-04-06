@@ -114,6 +114,11 @@ public final class Shooter implements Subsystem
 			_toggle ();
 	}
 	
+	public boolean pistonIsRetracted ()
+	{
+		return pistonState == RETRACTED;
+	}
+	
 	/**
 	 * Checks whether piston is at set position.
 	 * @return true if piston is at set position.

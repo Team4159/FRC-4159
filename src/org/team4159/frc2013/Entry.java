@@ -13,6 +13,8 @@ public class Entry extends RobotBase
 {
 	public static final int TICK_INTERVAL_MS = 20;
 	
+	private Logger logger = new Logger ();
+	
 	public Entry ()
 	{
 		System.out.println ("Entry instantiated.");
@@ -41,13 +43,17 @@ public class Entry extends RobotBase
 	public void startCompetition ()
 	{
 		System.out.println ("Entry.startCompetition() called.");
-                
+		
 		while (true)
 		{
 			int mode = ModeEnumerator.getMode();
 			Controller controller = createController (mode);
 			
 			System.out.println ("Controller set to " + controller.getClass ().getName ());
+			if (mode != ModeEnumerator.DISABLED)
+				logger.start ();
+			else
+				logger.stop ();
 			
 			controller.start ();
 			while (ModeEnumerator.getMode () == mode)
