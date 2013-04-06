@@ -15,7 +15,7 @@ public final class Shooter implements Subsystem
 	public static final int EXTENDED = 2;
 	
 	public static final double KP = 0.160;
-	public static final double KI = 0.060;
+	public static final double KI = 0.010;
 	public static final double KD = 0.300;
 	
 	/**

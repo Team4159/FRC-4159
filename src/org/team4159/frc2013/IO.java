@@ -109,7 +109,7 @@ public class IO
 	public static final PIDController drivePIDRight = 
 		new PIDController (Drive.KP, Drive.KI, Drive.KD, driveEncoderRight, driveMotorRight);
 	public static final PIDController shooterPID =
-		new PIDController (Shooter.KP, Shooter.KI, Shooter.KD, shooterEncoder, shooterMotor);
+		new PIDController (Shooter.KP, Shooter.KI, Shooter.KD, shooterEncoder, shooterMotor, 1.0 / 50);
 	
 	/****************************************
 	 * RELAYS                               *
