@@ -119,7 +119,7 @@ public class DataCollector
 		int slashEnd = path.lastIndexOf ('/') + 1;
 		String dirPrefix = path.substring (0, slashEnd);
 		
-		String url = "file:///" + dirPrefix + "DataCollectorNext.txt";
+		String url = "file:///" + dirPrefix + "DataCollectorNext.bin";
 		FileConnection fc = (FileConnection) Connector.open (url, Connector.READ_WRITE);
 		
 		// read next number

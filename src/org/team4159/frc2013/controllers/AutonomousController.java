@@ -3,6 +3,7 @@ package org.team4159.frc2013.controllers;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutonomousController extends Controller
 {
@@ -34,7 +35,7 @@ public class AutonomousController extends Controller
 			Shooter.instance.waitForPiston ();
 		}
 		
-		Controller.sleep (1500);
+		Controller.sleep (1000);
 		
 		Shooter.instance.setSpeed (0);
 		Shooter.instance.lowerAngler ();
