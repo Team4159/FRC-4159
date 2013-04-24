@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="var" path="SUNSPOTFRCSDK/lib/squawk.jar" sourcepath="/SUNSPOTFRCSDK/lib/squawk.src.zip"/>
 	<classpathentry kind="var" path="SUNSPOTFRCSDK/lib/wpilibj.jar" sourcepath="/SUNSPOTFRCSDK/lib/wpilibj.src.zip"/>
+	<classpathentry kind="var" path="SUNSPOTFRCSDK/lib/networktables-crio.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
