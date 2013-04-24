@@ -1,12 +1,12 @@
 package org.team4159.frc2013;
 
 import org.team4159.support.Controller;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.team4159.frc2013.controllers.AutonomousController;
 import org.team4159.frc2013.controllers.DisabledController;
 import org.team4159.frc2013.controllers.OperatorController;
 import org.team4159.frc2013.controllers.TestController;
+import org.team4159.frc2013.subsystems.DashboardManager;
 import org.team4159.support.ModeEnumerator;
 
 public class Entry extends RobotBase
@@ -17,10 +17,15 @@ public class Entry extends RobotBase
 	
 	public Entry ()
 	{
-		System.out.println ("Entry instantiated.");
+		System.out.println ("Entry initializing ...");
 		
 		// wake up the IO class
-		IO.class.getName ();
+		IO.class.equals (null);
+		
+		// initialize dashboard manager
+		DashboardManager.class.equals (null);
+		
+		System.out.println ("Entry instantiated.");
 	}
 	
 	private Controller createController (int ct)

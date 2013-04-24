@@ -3,10 +3,12 @@ package org.team4159.frc2013.controllers;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutonomousController extends Controller
 {
+	public static final int MODE_LEFT = 1;
+	public static final int MODE_RIGHT = 2;
+	
 	public AutonomousController ()
 	{
 		super (ModeEnumerator.AUTONOMOUS);
