@@ -12,6 +12,8 @@ import org.team4159.support.ModeEnumerator;
 public class Entry extends RobotBase
 {
 	public static final int TICK_INTERVAL_MS = 20;
+	public static final int RETRY_INTERVAL_MS = 500;
+	public static final int RETRY_COUNT = 10;
 	
 	private Logger logger = new Logger ();
 	
@@ -52,20 +54,61 @@ public class Entry extends RobotBase
 		while (true)
 		{
 			int mode = ModeEnumerator.getMode();
-			Controller controller = createController (mode);
-			
-			System.out.println ("Controller set to " + controller.getClass ().getName ());
 			if (mode != ModeEnumerator.DISABLED)
 				logger.start ();
 			else
 				logger.stop ();
 			
-			controller.start ();
-			while (ModeEnumerator.getMode () == mode)
-				try {
-					Thread.sleep (TICK_INTERVAL_MS);
-				} catch (InterruptedException e) {}
-			controller.stop ();
+			int retries = 0;
+			boolean givenUp = false;
+			
+			modeLoop:
+			while (true)
+			{
+				Controller controller = createController (mode);
+				String controllerName = controller.getClass ().getName ();
+				
+				if (!givenUp)
+				{
+					System.out.println ("Starting controller " + controllerName);
+					controller.start ();
+				}
+				
+				while (ModeEnumerator.getMode () == mode)
+				{
+					sleep (TICK_INTERVAL_MS);
+					
+					if (controller.getError () != null && !givenUp)
+					{
+						if (retries++ < RETRY_COUNT)
+						{
+							System.out.println ("Controller " + controllerName + " crashed, attempting restart ...");
+							sleep (RETRY_INTERVAL_MS);
+							continue modeLoop;
+						}
+						else
+						{
+							System.out.println ("Too many retries to restart " + controllerName +", giving up!");
+							givenUp = true;
+						}
+					}
+				}
+				
+				if (!givenUp)
+				{
+					System.out.println ("Stopping controller " + controllerName);
+					controller.stop ();
+				}
+				
+				break modeLoop;
+			}
 		}
+	}
+	
+	private void sleep (long x)
+	{
+		try {
+			Thread.sleep (x);
+		} catch (InterruptedException e) {}
 	}
 }
