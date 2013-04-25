@@ -1,5 +1,6 @@
 package org.team4159.frc2013.controllers;
 
+import org.team4159.frc2013.subsystems.DashboardManager;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
@@ -41,5 +42,16 @@ public class AutonomousController extends Controller
 		
 		Shooter.instance.setSpeed (0);
 		Shooter.instance.lowerAngler ();
+		
+		switch (DashboardManager.instance.getAutonomousMode ())
+		{
+			case MODE_LEFT:
+				break;
+			case MODE_RIGHT:
+				break;
+			default:
+				System.out.println ("Invalid autonomous mode!");
+				break;
+		}
 	}
 }
