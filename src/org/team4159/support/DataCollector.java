@@ -9,7 +9,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.microedition.io.Connector;
 import com.sun.cldc.jna.Function;
-import com.sun.cldc.jna.Native;
 import com.sun.cldc.jna.NativeLibrary;
 import com.sun.cldc.jna.Pointer;
 import com.sun.squawk.microedition.io.FileConnection;

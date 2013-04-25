@@ -37,4 +37,9 @@ public final class Drive extends RobotDrive implements Subsystem
 	{
 		return IO.driveGearbox.get () == Value.kForward;
 	}
+	
+	public void setLeftRightMotorOutputs (double left, double right)
+	{
+		super.setLeftRightMotorOutputs (left, right);
+	}
 }

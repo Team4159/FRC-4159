@@ -6,7 +6,6 @@ import org.team4159.frc2013.IO;
 import org.team4159.support.Controller;
 import org.team4159.support.Subsystem;
 import com.sun.squawk.util.MathUtils;
-import edu.wpi.first.wpilibj.image.CurveOptions;
 
 /**
  * The {@link Elevator} class implements all code required to

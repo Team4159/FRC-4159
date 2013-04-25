@@ -1,9 +1,5 @@
 package org.team4159.frc2013;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
-
 /*
 final class Vec
 {

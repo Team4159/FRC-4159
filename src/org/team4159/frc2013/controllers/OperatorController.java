@@ -1,15 +1,11 @@
 package org.team4159.frc2013.controllers;
 
-import org.team4159.frc2013.Entry;
 import org.team4159.frc2013.IO;
 import org.team4159.frc2013.subsystems.Drive;
-import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.Controller;
 import org.team4159.support.DriverStationLCD;
 import org.team4159.support.ModeEnumerator;
-import org.team4159.support.filters.LowPassFilter;
-import com.sun.squawk.util.Arrays;
 import com.sun.squawk.util.MathUtils;
 
 public class OperatorController extends Controller 

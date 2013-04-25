@@ -5,7 +5,6 @@
 package org.team4159.support;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import org.team4159.frc2013.Entry;
 
 /**

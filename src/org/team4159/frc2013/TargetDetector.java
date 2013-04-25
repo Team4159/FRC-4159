@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.image.LinearAverages.LinearAveragesMode;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVision.Rect;
 import edu.wpi.first.wpilibj.image.NIVisionException;
-import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import java.util.Vector;
 
 /**

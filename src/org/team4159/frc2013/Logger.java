@@ -3,7 +3,6 @@ package org.team4159.frc2013;
 import org.team4159.frc2013.subsystems.Shooter;
 import org.team4159.support.DataCollector;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.fpga.tGlobal;
 import java.util.Timer;
 import java.util.TimerTask;
 

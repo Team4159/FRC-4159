@@ -15,6 +15,7 @@ public class DashboardManager
 		SendableChooser autonomousMode = new SendableChooser ();
 		autonomousMode.addObject ("Left", new Integer (AutonomousController.MODE_LEFT));
 		autonomousMode.addObject ("Right", new Integer (AutonomousController.MODE_RIGHT));
+		autonomousMode.addObject ("Static", new Integer (AutonomousController.MODE_STATIC));
 		SmartDashboard.putData ("Autonomous Mode", autonomousMode);
 	}
 	

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import org.team4159.frc2013.controllers.AutonomousController;
 import org.team4159.frc2013.controllers.DisabledController;
 import org.team4159.frc2013.controllers.OperatorController;
+import org.team4159.frc2013.controllers.ResetController;
 import org.team4159.frc2013.controllers.TestController;
 import org.team4159.frc2013.subsystems.DashboardManager;
 import org.team4159.support.ModeEnumerator;
@@ -53,6 +54,13 @@ public class Entry extends RobotBase
 		
 		while (true)
 		{
+			try {
+				new ResetController ().run ();
+			} catch (Throwable t) {
+				System.err.println ("ResetController threw an exception!");
+				t.printStackTrace ();
+			}
+			
 			int mode = ModeEnumerator.getMode();
 			if (mode != ModeEnumerator.DISABLED)
 				logger.start ();
@@ -74,7 +82,7 @@ public class Entry extends RobotBase
 					controller.start ();
 				}
 				
-				while (ModeEnumerator.getMode () == mode)
+				while (controller.active ())
 				{
 					sleep (TICK_INTERVAL_MS);
 					
