@@ -16,7 +16,7 @@ public final class Shooter implements Subsystem
 	
 	public static final double KP = 0.160;
 	public static final double KI = 0.010;
-	public static final double KD = 0.300;
+	public static final double KD = 0.100;
 	
 	/**
 	 * Time (in milliseconds) required to fully retract.
@@ -59,11 +59,7 @@ public final class Shooter implements Subsystem
 	public void setSpeed (double x)
 	{
             if (shooterSpeed != x)
-            {
                 IO.shooterPID.setSetpoint (shooterSpeed = x);
-                IO.shooterPID.reset ();
-            }
-            
             IO.shooterPID.enable ();
 	}
 	

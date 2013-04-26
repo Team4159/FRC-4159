@@ -60,12 +60,12 @@ public class OperatorController extends Controller
                         if (!finePressed)
                         {
                             if (fasterPressed)
-                                fineShooterLevel += 1;
+                                fineShooterLevel += 0.25;
                             else
-                                fineShooterLevel -= 1;
+                                fineShooterLevel -= 0.25;
                         }
                         
-                        fineShooterLevel = MathUtils.round (fineShooterLevel);
+                        fineShooterLevel = MathUtils.round (fineShooterLevel * 4.0) / 4.0;
                     }
 
                     finePressed = fasterPressed || slowerPressed;
@@ -73,7 +73,7 @@ public class OperatorController extends Controller
                     Shooter.instance.setSpeed (fineShooter ? fineShooterLevel : coarse);
                 }
                 
-                if (false)
+                if (true)
                 {
                     // PID TESTING CODE
                     IO.shooterPID.setPID (
