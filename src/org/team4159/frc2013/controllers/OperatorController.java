@@ -11,6 +11,7 @@ import org.team4159.support.ModeEnumerator;
 import org.team4159.support.filters.LowPassFilter;
 import com.sun.squawk.util.Arrays;
 import com.sun.squawk.util.MathUtils;
+import org.team4159.frc2013.subsystems.DashboardManager;
 
 public class OperatorController extends Controller 
 {
@@ -73,7 +74,7 @@ public class OperatorController extends Controller
                     Shooter.instance.setSpeed (fineShooter ? fineShooterLevel : coarse);
                 }
                 
-                if (true)
+                if (false)
                 {
                     // PID TESTING CODE
                     IO.shooterPID.setPID (
@@ -105,5 +106,7 @@ public class OperatorController extends Controller
                 DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
                 DriverStationLCD.setLine (3, "Shooter ASP:" + IO.shooterPID.onTarget());
                 DriverStationLCD.setLine (4, "Shooter PWR:" + IO.shooterMotor.get());
+                
+                DashboardManager.instance.update ();
 	}
 }

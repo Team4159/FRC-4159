@@ -14,9 +14,9 @@ public final class Shooter implements Subsystem
 	public static final int RETRACTED = 1;
 	public static final int EXTENDED = 2;
 	
-	public static final double KP = 0.160;
-	public static final double KI = 0.010;
-	public static final double KD = 0.100;
+	public static final double KP = 0.180;
+	public static final double KI = 0.002;
+	public static final double KD = 0.006;
 	
 	/**
 	 * Time (in milliseconds) required to fully retract.

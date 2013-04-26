@@ -1,6 +1,7 @@
 package org.team4159.frc2013.controllers;
 
 import org.team4159.frc2013.IO;
+import org.team4159.frc2013.subsystems.DashboardManager;
 import org.team4159.frc2013.subsystems.Elevator;
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
@@ -16,6 +17,8 @@ public class DisabledController extends Controller
 	{
 		Elevator.instance.setMotorOutput (0);
                 IO.shooterPID.reset ();
+                
+                DashboardManager.instance.update ();
 		
                 /*
 		System.out.println (
