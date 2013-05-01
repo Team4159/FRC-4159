@@ -16,7 +16,7 @@ public final class Shooter implements Subsystem
 	
 	public static final double KP = 0.180;
 	public static final double KI = 0.002;
-	public static final double KD = 0.006;
+	public static final double KD = 0.003;
 	
 	/**
 	 * Time (in milliseconds) required to fully retract.
@@ -49,7 +49,7 @@ public final class Shooter implements Subsystem
 	{
 		// configure PID
                 IO.shooterPID.setAbsoluteTolerance(RPS_TOLERANCE);
-                IO.shooterPID.setOutputRange (0.0, 1.0);
+                IO.shooterPID.setOutputRange (-0.2, 1.0);
 	}
 
 	/**
