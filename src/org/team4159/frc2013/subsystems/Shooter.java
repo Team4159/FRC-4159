@@ -13,11 +13,19 @@ public final class Shooter implements Subsystem
 
 	public static final int RETRACTED = 1;
 	public static final int EXTENDED = 2;
+<<<<<<< HEAD
 
 	public static final double KP = 0.160;
 	public static final double KI = 0.010;
 	public static final double KD = 0.300;
 
+=======
+	
+	public static final double KP = 0.180;
+	public static final double KI = 0.002;
+	public static final double KD = 0.003;
+	
+>>>>>>> origin/SVR
 	/**
 	 * Time (in milliseconds) required to fully retract.
 	 */
@@ -48,8 +56,13 @@ public final class Shooter implements Subsystem
 	private Shooter ()
 	{
 		// configure PID
+<<<<<<< HEAD
 		IO.shooterPID.setAbsoluteTolerance (RPS_TOLERANCE);
 		IO.shooterPID.setOutputRange (0.0, 1.0);
+=======
+                IO.shooterPID.setAbsoluteTolerance(RPS_TOLERANCE);
+                IO.shooterPID.setOutputRange (-0.2, 1.0);
+>>>>>>> origin/SVR
 	}
 
 	/**
@@ -60,6 +73,7 @@ public final class Shooter implements Subsystem
 	 */
 	public void setSpeed (double x)
 	{
+<<<<<<< HEAD
 		if (shooterSpeed != x)
 		{
 			IO.shooterPID.setSetpoint (shooterSpeed = x);
@@ -67,6 +81,11 @@ public final class Shooter implements Subsystem
 		}
 
 		IO.shooterPID.enable ();
+=======
+            if (shooterSpeed != x)
+                IO.shooterPID.setSetpoint (shooterSpeed = x);
+            IO.shooterPID.enable ();
+>>>>>>> origin/SVR
 	}
 
 	/**

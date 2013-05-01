@@ -1,5 +1,11 @@
 package org.team4159.frc2013.controllers;
 
+<<<<<<< HEAD
+=======
+import org.team4159.frc2013.IO;
+import org.team4159.frc2013.subsystems.DashboardManager;
+import org.team4159.frc2013.subsystems.Elevator;
+>>>>>>> origin/SVR
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
 
@@ -9,4 +15,30 @@ public class DisabledController extends Controller
 	{
 		super (ModeEnumerator.DISABLED);
 	}
+<<<<<<< HEAD
+=======
+	
+	public void tick ()
+	{
+		Elevator.instance.setMotorOutput (0);
+                IO.shooterPID.reset ();
+                
+                DashboardManager.instance.update ();
+		
+                /*
+		System.out.println (
+			"elev raw: " + IO.elevatorEncoder.get () +
+			"\t" + 
+			"elev: " + IO.elevatorEncoder.getDistance ()
+		);
+		
+		System.out.println (
+			"shooter dist: " + IO.shooterEncoder.getDistance () + "\t" + 
+			"shooter rate: " + IO.shooterEncoder.getRate ()
+		);
+                */
+                
+                //System.out.println ("pos = " + IO.shooterEncoder.getPosition() + " \t vel = " + IO.shooterEncoder.getVelocity());
+	}
+>>>>>>> origin/SVR
 }

@@ -7,6 +7,7 @@ import org.team4159.support.Controller;
 import org.team4159.support.DriverStationLCD;
 import org.team4159.support.ModeEnumerator;
 import com.sun.squawk.util.MathUtils;
+import org.team4159.frc2013.subsystems.DashboardManager;
 
 public class OperatorController extends Controller 
 {
@@ -56,12 +57,12 @@ public class OperatorController extends Controller
                         if (!finePressed)
                         {
                             if (fasterPressed)
-                                fineShooterLevel += 1;
+                                fineShooterLevel += 0.25;
                             else
-                                fineShooterLevel -= 1;
+                                fineShooterLevel -= 0.25;
                         }
                         
-                        fineShooterLevel = MathUtils.round (fineShooterLevel);
+                        fineShooterLevel = MathUtils.round (fineShooterLevel * 4.0) / 4.0;
                     }
 
                     finePressed = fasterPressed || slowerPressed;
@@ -101,5 +102,7 @@ public class OperatorController extends Controller
                 DriverStationLCD.setLine (2, "Shooter RPS:" + Shooter.instance.getSpeed ());
                 DriverStationLCD.setLine (3, "Shooter ASP:" + IO.shooterPID.onTarget());
                 DriverStationLCD.setLine (4, "Shooter PWR:" + IO.shooterMotor.get());
+                
+                DashboardManager.instance.update ();
 	}
 }
