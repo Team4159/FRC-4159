@@ -1,11 +1,9 @@
 package org.team4159.frc2013.controllers;
 
-<<<<<<< HEAD
-=======
+
 import org.team4159.frc2013.IO;
 import org.team4159.frc2013.subsystems.DashboardManager;
 import org.team4159.frc2013.subsystems.Elevator;
->>>>>>> origin/SVR
 import org.team4159.support.Controller;
 import org.team4159.support.ModeEnumerator;
 
@@ -15,8 +13,6 @@ public class DisabledController extends Controller
 	{
 		super (ModeEnumerator.DISABLED);
 	}
-<<<<<<< HEAD
-=======
 	
 	public void tick ()
 	{
@@ -40,5 +36,4 @@ public class DisabledController extends Controller
                 
                 //System.out.println ("pos = " + IO.shooterEncoder.getPosition() + " \t vel = " + IO.shooterEncoder.getVelocity());
 	}
->>>>>>> origin/SVR
 }

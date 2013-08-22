@@ -3,17 +3,13 @@ package org.team4159.frc2013.subsystems;
 import org.team4159.frc2013.controllers.AutonomousController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-<<<<<<< HEAD
-=======
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import org.team4159.frc2013.IO;
->>>>>>> origin/SVR
 
 public class DashboardManager
 {
 	public static final DashboardManager instance = new DashboardManager ();
-	
-<<<<<<< HEAD
+
 	private SendableChooser autonomousMode;
 	
 	private DashboardManager ()
@@ -29,11 +25,6 @@ public class DashboardManager
 	{
 		return ((Integer) autonomousMode.getSelected ()).intValue ();
 	}
-=======
-	private DashboardManager ()
-	{
-	}
-        
         public void update ()
         {
             SmartDashboard.putBoolean ("Angler Up", Shooter.instance.anglerIsUp ());
@@ -42,5 +33,4 @@ public class DashboardManager
             SmartDashboard.putBoolean ("Shoot!", IO.shooterPID.onTarget());
             SmartDashboard.putNumber ("Shooter Power", IO.shooterMotor.get());
         }
->>>>>>> origin/SVR
 }
