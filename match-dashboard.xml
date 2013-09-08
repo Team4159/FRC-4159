@@ -1,12 +1,5 @@
 <xml version="1.0">
 <dashboard>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="6" y="342"/>
-		<width>417</width>
-		<height>264</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\fullCourt.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
 	<widget field="Shoot!" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="834" y="283"/>
 		<width>199</width>
@@ -41,19 +34,25 @@
 		<width>745</width>
 		<height>30</height>
 	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="16" y="8"/>
+		<width>160</width>
+		<height>30</height>
 	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="16" y="8"/>
+		<width>745</width>
+		<height>30</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="16" y="8"/>
+		<width>160</width>
+		<height>30</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="16" y="8"/>
+		<width>745</width>
+		<height>30</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="16" y="8"/>
@@ -61,21 +60,7 @@
 		<height>30</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="6" y="342"/>
+		<location x="10" y="351"/>
 		<width>377</width>
 		<height>263</height>
 		<property name="Image File" value="C:\Users\Waylin\Desktop\fullCourt.jpg"/>
@@ -86,124 +71,20 @@
 		<width>745</width>
 		<height>30</height>
 	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="16" y="8"/>
 		<width>160</width>
 		<height>30</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
+		<location x="391" y="53"/>
 		<width>390</width>
 		<height>285</height>
 		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
 		<property name="Maintain Aspect Ratio" value="true"/>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="6" y="342"/>
-		<width>377</width>
-		<height>263</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\fullCourt.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="16" y="8"/>
-		<width>745</width>
-		<height>30</height>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="16" y="8"/>
-		<width>160</width>
-		<height>30</height>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="6" y="342"/>
-		<width>377</width>
-		<height>263</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\fullCourt.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="16" y="8"/>
-		<width>745</width>
-		<height>30</height>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
-		<width>373</width>
-		<height>293</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="16" y="8"/>
-		<width>160</width>
-		<height>30</height>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="401" y="49"/>
-		<width>390</width>
-		<height>285</height>
-		<property name="Image File" value="C:\Users\Waylin\Desktop\leftchamp.jpg"/>
-		<property name="Maintain Aspect Ratio" value="true"/>
-	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
-		<location x="17" y="48"/>
+		<location x="10" y="51"/>
 		<width>373</width>
 		<height>293</height>
 		<property name="Image File" value="C:\Users\Waylin\Desktop\RightChamp.jpg"/>
