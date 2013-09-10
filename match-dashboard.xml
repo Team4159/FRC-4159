@@ -93,4 +93,7 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Slider 1"/>
+	<hidden field="Checkbox 2"/>
+	<hidden field="Checkbox 1"/>
 </xml>
