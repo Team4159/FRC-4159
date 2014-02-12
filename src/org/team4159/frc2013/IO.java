@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.ADXL345_I2C.DataFormat_Range;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Encoder.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
@@ -63,8 +62,8 @@ public class IO
 		final double inchesPerPulse = 0.0001; // FIX ME!!!!!! (inches per pulse)
 		driveEncoderLeft.setDistancePerPulse (inchesPerPulse);
 		driveEncoderRight.setDistancePerPulse (inchesPerPulse);
-		driveEncoderLeft.setPIDSourceParameter (PIDSourceParameter.kDistance);
-		driveEncoderRight.setPIDSourceParameter (PIDSourceParameter.kDistance);
+		driveEncoderLeft.setPIDSourceParameter (Encoder.PIDSourceParameter.kDistance);
+		driveEncoderRight.setPIDSourceParameter (Encoder.PIDSourceParameter.kDistance);
 		driveEncoderLeft.start ();
 		driveEncoderRight.start ();
 	}
@@ -72,7 +71,7 @@ public class IO
 	public static final Encoder elevatorEncoder = new Encoder (9, 10);
 	static {
 		elevatorEncoder.setDistancePerPulse (1.0);
-		elevatorEncoder.setPIDSourceParameter (PIDSourceParameter.kDistance);
+		elevatorEncoder.setPIDSourceParameter (Encoder.PIDSourceParameter.kDistance);
 		elevatorEncoder.start ();
 	}
 	
@@ -81,7 +80,7 @@ public class IO
                 double pulsesPerRevolution = 180;
                 double revolutionsPerPulse = 1 / pulsesPerRevolution;
 		shooterEncoder.setDistancePerPulse (revolutionsPerPulse);
-		shooterEncoder.setPIDSourceParameter (PIDSourceParameter.kRate);
+		shooterEncoder.setPIDSourceParameter (Encoder.PIDSourceParameter.kRate);
 		shooterEncoder.start ();
 	}
 	
